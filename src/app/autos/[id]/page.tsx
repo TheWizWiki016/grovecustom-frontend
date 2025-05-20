@@ -4,6 +4,11 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import Image from 'next/image'
 import { Car, Gauge, Fuel, Settings, Video, Camera, ChevronLeft, ChevronRight, X, ShoppingCart, Tag } from 'lucide-react'
+import { loadStripe } from '@stripe/stripe-js'
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!) // Define tu clave pública en .env
+
+
 
 interface Auto {
     _id: string
@@ -134,17 +139,23 @@ export default function DetalleAutoPage() {
         setIsLoading(true)
 
         try {
-            // Aquí puedes agregar la lógica de compra
-            // Por ejemplo, llamar a una API de pagos o redirigir a una página de checkout
+            const stripe = await stripePromise
+            if (!stripe) throw new Error('Stripe no cargó correctamente.')
 
-            // Simulación de proceso de compra
-            await new Promise(resolve => setTimeout(resolve, 2000))
+            const response = await fetch('http://localhost:5000/api/create-checkout-session', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ auto }),
+            })
 
-            // Ejemplo de redirección o acción después de la compra
-            // window.location.href = `/checkout/${auto._id}`
+            const data = await response.json()
 
-            if (auto) {
-                alert(`¡Solicitud de compra enviada para ${auto.marca} ${auto.modelo}!`)
+            if (data.url) {
+                window.location.href = data.url // redirección a Stripe Checkout
+            } else {
+                throw new Error('No se recibió URL de Stripe.')
             }
         } catch (error) {
             console.error('Error en la compra:', error)
@@ -153,7 +164,6 @@ export default function DetalleAutoPage() {
             setIsLoading(false)
         }
     }
-
     // Navegación del modal
     const nextModalImage = () => {
         if (auto?.imagenes) {

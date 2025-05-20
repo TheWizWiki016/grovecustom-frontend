@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useMemo } from "react";
-import { Search, Filter, Car, Tag, X } from "lucide-react";
+import { Search, Filter, Car, Tag, X, Zap, Crown, Star, Award, Settings, Gauge, Fuel } from "lucide-react";
 
 type Auto = {
     _id: string;
@@ -11,10 +11,36 @@ type Auto = {
     modelo: string;
     descripcion: string;
     precio: number;
-    imagenes: string;
+    imagenes: string[];
     categoria?: string;
     año?: number;
+    caballosFuerza?: number;
+    tipoCombustible?: string;
+    potencia?: string;
+    cilindrada?: string;
+    transmision?: string;
 };
+
+// Category icons matching the home page
+const categoriasIcons = {
+    'supercar': <Zap className="w-4 h-4" />,
+    'hypercar': <Crown className="w-4 h-4" />,
+    'luxury-sedan': <Star className="w-4 h-4" />,
+    'luxury-suv': <Award className="w-4 h-4" />,
+    'convertible': <Car className="w-4 h-4" />,
+    'coupe-gran-turismo': <Gauge className="w-4 h-4" />,
+    'deportivo-clasico': <Settings className="w-4 h-4" />
+}
+
+const categoriasLabels = {
+    'supercar': 'Supercar',
+    'hypercar': 'Hypercar',
+    'luxury-sedan': 'Sedán de Lujo',
+    'luxury-suv': 'SUV de Lujo',
+    'convertible': 'Convertible',
+    'coupe-gran-turismo': 'Coupé GT',
+    'deportivo-clasico': 'Clásico'
+}
 
 export default function AutosPage() {
     const [autos, setAutos] = useState<Auto[]>([]);
@@ -80,30 +106,6 @@ export default function AutosPage() {
         return grouped;
     }, [filteredAutos]);
 
-    // Función para obtener el color de la categoría
-    const getCategoryColor = (categoria: string) => {
-        const colors = {
-            'SUV': 'bg-blue-500',
-            'Sedán': 'bg-green-500',
-            'Sedan': 'bg-green-500',
-            'Hatchback': 'bg-purple-500',
-            'Coupé': 'bg-red-500',
-            'Coupe': 'bg-red-500',
-            'Convertible': 'bg-yellow-500',
-            'Deportivo': 'bg-orange-500',
-            'Pickup': 'bg-gray-600',
-            'Camioneta': 'bg-gray-600',
-            'Van': 'bg-indigo-500',
-            'Minivan': 'bg-indigo-500',
-            'Crossover': 'bg-teal-500',
-            'Wagon': 'bg-pink-500',
-            'Eléctrico': 'bg-emerald-500',
-            'Híbrido': 'bg-lime-500',
-            'Sin Categoría': 'bg-gray-500'
-        };
-        return colors[categoria as keyof typeof colors] || 'bg-gray-500';
-    };
-
     // Manejar filtro por categoría
     const toggleCategory = (category: string) => {
         setSelectedCategories(prev =>
@@ -121,181 +123,234 @@ export default function AutosPage() {
 
     if (loading) {
         return (
-            <main className="max-w-7xl mx-auto px-6 py-12">
-                <div className="flex items-center justify-center min-h-64">
-                    <div className="text-center">
-                        <div className="inline-block animate-spin rounded-full h-32 w-32 border-b-2 border-yellow-500 mb-4"></div>
-                        <p className="text-white text-xl font-semibold">Cargando autos...</p>
-                    </div>
+            <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white flex items-center justify-center">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-yellow-400 mx-auto"></div>
+                    <p className="text-yellow-400 mt-4 text-xl">Cargando vehículos de lujo...</p>
                 </div>
-            </main>
+            </div>
         );
     }
 
     return (
-        <main className="max-w-7xl mx-auto px-6 py-12">
-            <div className="mb-10">
-                <h1 className="text-4xl font-extrabold text-yellow-500 mb-6">Autos de Lujo</h1>
-                <p className="text-gray-300 text-lg">Encuentra el auto perfecto para ti</p>
-            </div>
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white">
+            {/* Header Section */}
+            <section className="py-12 px-6">
+                <div className="max-w-7xl mx-auto">
+                    <h1 className="text-6xl font-bold bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent mb-4 text-center">
+                        COLECCIÓN DE LUJO
+                    </h1>
+                    <p className="text-gray-300 text-xl text-center">Encuentra el vehículo perfecto para ti</p>
+                </div>
+            </section>
 
-            {/* Barra de búsqueda y filtros */}
-            <div className="bg-gray-900 bg-opacity-50 rounded-xl p-6 mb-8 shadow-xl">
-                <div className="flex flex-col lg:flex-row gap-4 items-center">
-                    {/* Barra de búsqueda */}
-                    <div className="relative flex-1 w-full">
-                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-                        <input
-                            type="text"
-                            placeholder="Buscar por marca, modelo, descripción o categoría..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-10 pr-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-300"
-                        />
-                    </div>
+            {/* Search and Filters Section */}
+            <section className="px-6 pb-8">
+                <div className="max-w-7xl mx-auto">
+                    <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-2xl p-6 shadow-xl">
+                        <div className="flex flex-col lg:flex-row gap-4 items-center">
+                            {/* Search Bar */}
+                            <div className="relative flex-1 w-full">
+                                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                                <input
+                                    type="text"
+                                    placeholder="Buscar por marca, modelo, descripción o categoría..."
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    className="w-full pl-12 pr-4 py-4 bg-gray-700/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-300"
+                                />
+                            </div>
 
-                    {/* Botón de filtros */}
-                    <button
-                        onClick={() => setShowFilters(!showFilters)}
-                        className="flex items-center gap-2 px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-black font-semibold rounded-lg transition-all duration-300 whitespace-nowrap"
-                    >
-                        <Filter size={20} />
-                        Filtros
-                        {selectedCategories.length > 0 && (
-                            <span className="bg-black text-yellow-500 rounded-full px-2 py-1 text-xs font-bold">
-                                {selectedCategories.length}
-                            </span>
+                            {/* Filter Button */}
+                            <button
+                                onClick={() => setShowFilters(!showFilters)}
+                                className="flex items-center gap-2 px-6 py-4 bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-bold rounded-xl hover:from-yellow-500 hover:to-yellow-700 transition-all duration-300 shadow-lg shadow-yellow-400/20"
+                            >
+                                <Filter size={20} />
+                                Filtros
+                                {selectedCategories.length > 0 && (
+                                    <span className="bg-black text-yellow-400 rounded-full px-2 py-1 text-xs font-bold">
+                                        {selectedCategories.length}
+                                    </span>
+                                )}
+                            </button>
+
+                            {/* Clear Filters */}
+                            {(selectedCategories.length > 0 || searchTerm) && (
+                                <button
+                                    onClick={clearFilters}
+                                    className="flex items-center gap-2 px-4 py-4 bg-red-500/80 hover:bg-red-500 text-white rounded-xl transition-all duration-300 border border-red-500/30"
+                                >
+                                    <X size={16} />
+                                    Limpiar
+                                </button>
+                            )}
+                        </div>
+
+                        {/* Expandable Filters Panel */}
+                        {showFilters && (
+                            <div className="mt-6 pt-6 border-t border-gray-700">
+                                <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                                    <Tag size={20} className="text-yellow-400" />
+                                    Filtrar por Categoría
+                                </h3>
+                                <div className="flex flex-wrap gap-3">
+                                    {categories.map(category => (
+                                        <button
+                                            key={category}
+                                            onClick={() => toggleCategory(category)}
+                                            className={`px-4 py-3 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 border ${selectedCategories.includes(category)
+                                                ? 'bg-yellow-400/20 border-yellow-400 text-yellow-400 shadow-lg'
+                                                : 'bg-gray-700/50 border-gray-600 text-gray-300 hover:bg-gray-600/50 hover:border-gray-500'
+                                                }`}
+                                        >
+                                            <span className="text-yellow-400">
+                                                {categoriasIcons[category as keyof typeof categoriasIcons] || <Car className="w-4 h-4" />}
+                                            </span>
+                                            {categoriasLabels[category as keyof typeof categoriasLabels] || category}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
                         )}
-                    </button>
+                    </div>
+                </div>
+            </section>
 
-                    {/* Botón limpiar filtros */}
-                    {(selectedCategories.length > 0 || searchTerm) && (
-                        <button
-                            onClick={clearFilters}
-                            className="flex items-center gap-2 px-4 py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-all duration-300"
-                        >
-                            <X size={16} />
-                            Limpiar
-                        </button>
+            {/* Results Counter */}
+            <section className="px-6 pb-4">
+                <div className="max-w-7xl mx-auto">
+                    <p className="text-gray-300 text-lg">
+                        Mostrando {filteredAutos.length} de {autos.length} vehículos
+                        {searchTerm && ` para "${searchTerm}"`}
+                        {selectedCategories.length > 0 && ` en ${selectedCategories.map(cat => categoriasLabels[cat as keyof typeof categoriasLabels] || cat).join(', ')}`}
+                    </p>
+                </div>
+            </section>
+
+            {/* Cars Grid by Category */}
+            <section className="px-6 pb-16">
+                <div className="max-w-7xl mx-auto">
+                    {Object.keys(autosByCategory).length === 0 ? (
+                        <div className="text-center py-16">
+                            <Car size={80} className="mx-auto text-gray-600 mb-6" />
+                            <h3 className="text-3xl font-bold text-gray-400 mb-4">No se encontraron vehículos</h3>
+                            <p className="text-gray-500 text-lg mb-8">Intenta cambiar los filtros de búsqueda</p>
+                            <button
+                                onClick={clearFilters}
+                                className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-bold px-6 py-3 rounded-xl hover:from-yellow-500 hover:to-yellow-700 transition-all"
+                            >
+                                Limpiar Filtros
+                            </button>
+                        </div>
+                    ) : (
+                        Object.entries(autosByCategory)
+                            .sort(([a], [b]) => a.localeCompare(b))
+                            .map(([category, categoryAutos]) => (
+                                <div key={category} className="mb-16">
+                                    {/* Category Header */}
+                                    <div className="flex items-center gap-4 mb-8">
+                                        <div className="bg-yellow-400/20 rounded-full p-3">
+                                            <span className="text-yellow-400">
+                                                {categoriasIcons[category as keyof typeof categoriasIcons] || <Car className="w-6 h-6" />}
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <h2 className="text-3xl font-bold text-white">
+                                                {categoriasLabels[category as keyof typeof categoriasLabels] || category}
+                                            </h2>
+                                            <span className="bg-gray-700/50 text-gray-300 px-3 py-1 rounded-full text-sm">
+                                                {categoryAutos.length} {categoryAutos.length === 1 ? 'vehículo' : 'vehículos'}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    {/* Cars Grid */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                        {categoryAutos.map((auto) => (
+                                            <Link key={auto._id} href={`/autos/${auto._id}`}>
+                                                <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl hover:border-yellow-400 transition-all duration-300 group">
+                                                    {/* Car Image */}
+                                                    <div className="relative h-64 bg-gray-700">
+                                                        {auto.imagenes && auto.imagenes.length > 0 ? (
+                                                            <Image
+                                                                src={auto.imagenes[0]}
+                                                                alt={`${auto.marca} ${auto.modelo}`}
+                                                                fill
+                                                                className="object-cover group-hover:scale-105 transition-transform duration-300"
+                                                                sizes="(max-width: 768px) 100vw, 33vw"
+                                                            />
+                                                        ) : (
+                                                            <div className="w-full h-full flex items-center justify-center">
+                                                                <Car className="w-16 h-16 text-gray-500" />
+                                                            </div>
+                                                        )}
+
+                                                        {/* Category Badge */}
+                                                        {auto.categoria && (
+                                                            <div className="absolute top-4 left-4 bg-black/70 backdrop-blur-sm rounded-full px-3 py-1 flex items-center gap-2">
+                                                                <span className="text-yellow-400">
+                                                                    {categoriasIcons[auto.categoria as keyof typeof categoriasIcons] || <Car className="w-4 h-4" />}
+                                                                </span>
+                                                                <span className="text-white text-xs font-semibold">
+                                                                    {categoriasLabels[auto.categoria as keyof typeof categoriasLabels] || auto.categoria}
+                                                                </span>
+                                                            </div>
+                                                        )}
+
+                                                        <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                                            <div className="bg-yellow-400/20 backdrop-blur-sm rounded-full px-4 py-2">
+                                                                <span className="text-yellow-400 font-semibold">Ver Detalles</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Car Information */}
+                                                    <div className="p-6">
+                                                        <h3 className="text-xl font-bold text-white mb-3 group-hover:text-yellow-400 transition-colors">
+                                                            {auto.marca} {auto.modelo}
+                                                        </h3>
+
+                                                        <p className="text-gray-400 text-sm mb-4 line-clamp-2">
+                                                            {auto.descripcion}
+                                                        </p>
+
+                                                        {/* Price */}
+                                                        <div className="mb-4">
+                                                            <span className="text-3xl font-bold text-yellow-400">
+                                                                ${auto.precio.toLocaleString()}
+                                                            </span>
+                                                        </div>
+
+                                                        {/* Specifications */}
+                                                        <div className="flex justify-center gap-4 text-sm text-gray-300">
+                                                            <div className="flex items-center gap-1">
+                                                                <Gauge className="w-4 h-4 text-yellow-400" />
+                                                                <span>{auto.año}</span>
+                                                            </div>
+                                                            {auto.caballosFuerza && (
+                                                                <div className="flex items-center gap-1">
+                                                                    <Zap className="w-4 h-4 text-yellow-400" />
+                                                                    <span>{auto.caballosFuerza} HP</span>
+                                                                </div>
+                                                            )}
+                                                            {auto.tipoCombustible && (
+                                                                <div className="flex items-center gap-1">
+                                                                    <Fuel className="w-4 h-4 text-yellow-400" />
+                                                                    <span>{auto.tipoCombustible}</span>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </Link>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))
                     )}
                 </div>
-
-                {/* Panel de filtros expandible */}
-                {showFilters && (
-                    <div className="mt-6 pt-6 border-t border-gray-700">
-                        <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                            <Tag size={20} className="text-yellow-500" />
-                            Filtrar por Categoría
-                        </h3>
-                        <div className="flex flex-wrap gap-3">
-                            {categories.map(category => (
-                                <button
-                                    key={category}
-                                    onClick={() => toggleCategory(category)}
-                                    className={`px-4 py-2 rounded-full font-medium transition-all duration-300 flex items-center gap-2 ${selectedCategories.includes(category)
-                                        ? `${getCategoryColor(category)} text-white shadow-lg scale-105`
-                                        : 'bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white'
-                                        }`}
-                                >
-                                    <span className={`w-2 h-2 rounded-full ${selectedCategories.includes(category)
-                                        ? 'bg-white'
-                                        : getCategoryColor(category).replace('bg-', 'bg-opacity-70 bg-')
-                                        }`}></span>
-                                    {category}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-                )}
-            </div>
-
-            {/* Resultados */}
-            <div className="mb-6">
-                <p className="text-gray-300">
-                    Mostrando {filteredAutos.length} de {autos.length} autos
-                    {searchTerm && ` para "${searchTerm}"`}
-                    {selectedCategories.length > 0 && ` en ${selectedCategories.join(', ')}`}
-                </p>
-            </div>
-
-            {/* Autos agrupados por categoría */}
-            {Object.keys(autosByCategory).length === 0 ? (
-                <div className="text-center py-16">
-                    <Car size={64} className="mx-auto text-gray-600 mb-4" />
-                    <h3 className="text-xl font-semibold text-gray-400 mb-2">No se encontraron autos</h3>
-                    <p className="text-gray-500">Intenta cambiar los filtros de búsqueda</p>
-                </div>
-            ) : (
-                Object.entries(autosByCategory)
-                    .sort(([a], [b]) => a.localeCompare(b))
-                    .map(([category, categoryAutos]) => (
-                        <div key={category} className="mb-12">
-                            {/* Header de categoría */}
-                            <div className="flex items-center gap-3 mb-6">
-                                <div className={`w-4 h-4 rounded-full ${getCategoryColor(category)}`}></div>
-                                <h2 className="text-2xl font-bold text-white">
-                                    {category}
-                                </h2>
-                                <span className="bg-gray-700 text-gray-300 px-3 py-1 rounded-full text-sm">
-                                    {categoryAutos.length} {categoryAutos.length === 1 ? 'auto' : 'autos'}
-                                </span>
-                            </div>
-
-                            {/* Grid de autos */}
-                            <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-                                {categoryAutos.map((auto) => (
-                                    <Link key={auto._id} href={`/autos/${auto._id}`} passHref>
-                                        <div className="group cursor-pointer bg-gray-900 bg-opacity-50 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-yellow-500/20 transform hover:scale-105 transition-all duration-300">
-                                            <div className="relative w-full h-64 overflow-hidden">
-                                                {auto.imagenes ? (
-                                                    <Image
-                                                        src={auto.imagenes[0]}
-                                                        alt={`${auto.marca} ${auto.modelo}`}
-                                                        fill
-                                                        style={{ objectFit: "cover" }}
-                                                        className="group-hover:scale-110 transition-transform duration-300"
-                                                        sizes="(max-width: 768px) 100vw, 33vw"
-                                                    />
-                                                ) : (
-                                                    <div className="w-full h-full bg-gray-700 flex items-center justify-center text-gray-400">
-                                                        Sin imagen
-                                                    </div>
-                                                )}
-                                                {auto.categoria && (
-                                                    <div className="absolute top-4 left-4">
-                                                        <span className={`px-3 py-1 rounded-full text-white text-xs font-semibold ${getCategoryColor(auto.categoria)} shadow-lg`}>
-                                                            {auto.categoria}
-                                                        </span>
-                                                    </div>
-                                                )}
-                                                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                                            </div>
-                                            <div className="p-6">
-                                                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-yellow-500 transition-colors duration-300">
-                                                    {auto.marca} {auto.modelo}
-                                                </h3>
-                                                <p className="text-gray-300 mb-4 line-clamp-2">
-                                                    {auto.descripcion}
-                                                </p>
-                                                <div className="flex items-center justify-between">
-                                                    <p className="text-yellow-500 font-bold text-lg">
-                                                        ${auto.precio.toLocaleString()}
-                                                    </p>
-                                                    {auto.año && (
-                                                        <p className="text-gray-400 text-sm">
-                                                            {auto.año}
-                                                        </p>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </Link>
-                                ))}
-                            </div>
-
-                        </div>
-                    ))
-            )}
-        </main>
+            </section>
+        </div>
     );
 }

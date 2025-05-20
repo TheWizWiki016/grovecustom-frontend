@@ -6,6 +6,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Car, Eye, Star, Zap, Fuel, Gauge, Crown, Award, Settings, ChevronLeft, ChevronRight } from 'lucide-react'
 import Footer from '@/components/Footer'
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 // Types for cars
 interface Auto {
@@ -133,7 +134,6 @@ export default function HomePage() {
                   )}
                 </div>
                 <div className="text-center">
-                  <span className="text-sm text-yellow-400 font-medium">Slide de autos</span>
                   <div className="mt-2 text-gray-300">
                     <h3 className="text-xl font-bold">{autos[currentSlide].marca} {autos[currentSlide].modelo}</h3>
                     <p className="text-lg text-yellow-400">${autos[currentSlide].precio.toLocaleString()}</p>
@@ -298,6 +298,7 @@ export default function HomePage() {
           )}
         </div>
       </section>
+      <SpeedInsights />
     </div><Footer /></>
   )
 }
