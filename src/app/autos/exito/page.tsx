@@ -1,104 +1,63 @@
+// src/app/autos/exito/page.tsx
 
-'use client';
-
-import { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
-import { CheckCircle2, Mail, CreditCard, Clock, Loader2, Car, ShoppingBag, Calendar, Zap } from 'lucide-react';
-import Link from 'next/link';
+import { CheckCircle2, Mail, CreditCard, Clock, Car, ShoppingBag, Calendar } from 'lucide-react'
+import Link from 'next/link'
 
 type Session = {
-    id: string;
-    payment_status: string;
-    customer_details?: {
-        email?: string;
-        name?: string;
-    };
-    amount_total?: number;
-    currency?: string;
-    metadata?: {
-        vehiculo_marca?: string;
-        vehiculo_modelo?: string;
-        vehiculo_año?: string;
-    };
-    // Agrega otros campos según sea necesario
-};
+    id: string
+    payment_status: string
+    customer_details?: { email?: string; name?: string }
+    amount_total?: number
+    currency?: string
+    metadata?: { vehiculo_marca?: string; vehiculo_modelo?: string; vehiculo_año?: string }
+}
 
-export default function Exito() {
-    const searchParams = useSearchParams();
-    const sessionId = searchParams.get('session_id');
+interface ExitoProps {
+    searchParams: { session_id?: string }
+}
 
-    const [session, setSession] = useState<Session | null>(null);
-    const [error, setError] = useState<string | null>(null);
-    const [loading, setLoading] = useState(true);
+// Server Component que hace fetch directo en el servidor
+export default async function Exito({ searchParams }: ExitoProps) {
+    const sessionId = searchParams.session_id
 
-    useEffect(() => {
-        if (!sessionId) {
-            setError('ID de sesión no encontrado');
-            setLoading(false);
-            return;
-        }
-
-        fetch(`http://localhost:5000/api/checkout-session?session_id=${sessionId}`)
-            .then(res => {
-                if (!res.ok) throw new Error('Error al obtener la sesión');
-                return res.json();
-            })
-            .then(data => {
-                setSession(data);
-                setLoading(false);
-            })
-            .catch(err => {
-                setError(err.message);
-                setLoading(false);
-            });
-    }, [sessionId]);
-
-    // Estado de carga
-    if (loading) {
+    if (!sessionId) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white flex items-center justify-center">
-                <div className="text-center">
-                    <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-yellow-400 mx-auto"></div>
-                    <p className="text-yellow-400 mt-4 text-xl">Verificando tu compra...</p>
+            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white p-6">
+                <div className="max-w-md w-full text-center">
+                    <h1 className="text-3xl font-bold mb-4">ID de sesión no encontrado</h1>
+                    <Link
+                        href="/"
+                        className="inline-block bg-yellow-500 px-6 py-3 rounded-lg font-semibold text-black hover:bg-yellow-600 transition"
+                    >
+                        Volver al Inicio
+                    </Link>
                 </div>
             </div>
-        );
+        )
     }
 
-    // Estado de error
-    if (error) {
+    const res = await fetch(`http://localhost:5000/api/checkout-session?session_id=${sessionId}`, {
+        cache: 'no-store', // para que siempre haga fetch fresco
+    })
+
+    if (!res.ok) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white flex items-center justify-center px-6">
-                <div className="max-w-md w-full">
-                    <div className="bg-gray-800/50 backdrop-blur-sm border border-red-500/30 rounded-2xl shadow-2xl p-8 text-center">
-                        <div className="w-20 h-20 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <Car className="w-10 h-10 text-red-400" />
-                        </div>
-                        <h1 className="text-3xl font-bold text-white mb-4">
-                            Oops! Algo salió mal
-                        </h1>
-                        <p className="text-gray-300 mb-6">
-                            No pudimos procesar tu solicitud en este momento.
-                        </p>
-                        <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 mb-6">
-                            <p className="text-red-400 text-sm">
-                                Error: {error}
-                            </p>
-                        </div>
-                        <Link
-                            href="/"
-                            className="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-bold px-6 py-3 rounded-xl hover:from-yellow-500 hover:to-yellow-700 transition-all"
-                        >
-                            <Car className="w-5 h-5" />
-                            Volver al Inicio
-                        </Link>
-                    </div>
+            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white p-6">
+                <div className="max-w-md w-full text-center">
+                    <h1 className="text-3xl font-bold mb-4">Error al obtener la sesión</h1>
+                    <Link
+                        href="/"
+                        className="inline-block bg-yellow-500 px-6 py-3 rounded-lg font-semibold text-black hover:bg-yellow-600 transition"
+                    >
+                        Volver al Inicio
+                    </Link>
                 </div>
             </div>
-        );
+        )
     }
 
-    // Estado de éxito
+    const session: Session = await res.json()
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white">
             {/* Header con gradiente similar al título principal */}
@@ -110,9 +69,7 @@ export default function Exito() {
                     <h1 className="text-6xl font-bold bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent mb-4">
                         ¡COMPRA EXITOSA!
                     </h1>
-                    <p className="text-xl text-gray-300">
-                        Tu pago ha sido procesado correctamente
-                    </p>
+                    <p className="text-xl text-gray-300">Tu pago ha sido procesado correctamente</p>
                 </div>
             </section>
 
@@ -145,9 +102,7 @@ export default function Exito() {
 
                         {/* Detalles de la transacción */}
                         <div className="p-8 space-y-6">
-                            <h2 className="text-2xl font-bold text-white mb-6 text-center">
-                                Detalles de la Transacción
-                            </h2>
+                            <h2 className="text-2xl font-bold text-white mb-6 text-center">Detalles de la Transacción</h2>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {/* ID de Transacción */}
@@ -249,5 +204,5 @@ export default function Exito() {
                 </div>
             </section>
         </div>
-    );
+    )
 }
