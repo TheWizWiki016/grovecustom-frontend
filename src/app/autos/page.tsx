@@ -53,9 +53,7 @@ export default function AutosPage() {
     useEffect(() => {
         const fetchAutos = async () => {
             try {
-                const res = await fetch("http://localhost:5000/api/autos", {
-                    cache: "no-store",
-                });
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/autos`, { cache: "no-store" });
                 const data: Auto[] = await res.json();
                 setAutos(data);
             } catch (error) {

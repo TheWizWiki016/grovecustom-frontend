@@ -57,7 +57,7 @@ export default function HomePage() {
   useEffect(() => {
     const fetchAutos = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/autos')
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/autos`)
         if (!response.ok) {
           throw new Error('Error al cargar los autos')
         }
