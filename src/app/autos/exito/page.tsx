@@ -17,7 +17,12 @@ interface ExitoProps {
 }
 
 // Server Component que hace fetch directo en el servidor
-export default async function Exito({ searchParams }: ExitoProps) {
+export default async function Exito({
+    searchParams,
+}: {
+    searchParams: { session_id?: string }
+}) {
+
     const sessionId = searchParams.session_id
 
     if (!sessionId) {
