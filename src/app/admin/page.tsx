@@ -110,7 +110,7 @@ export default function AdminDashboardPage() {
     }
 
     // Función para ordenar
-    const handleSort = (field) => {
+    const handleSort = (field: string) => {
         setSortDirection(sortField === field && sortDirection === 'asc' ? 'desc' : 'asc')
         setSortField(field)
     }
