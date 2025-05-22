@@ -1,4 +1,9 @@
-// ✅ page.tsx CORRECTO y funcionando con Stripe session_id
+// src/app/autos/exito/page.tsx
+
+import { CheckCircle2 } from 'lucide-react'
+import Link from 'next/link'
+
+// 👇 NO USAMOS INTERFACES NI TIPOS PERSONALIZADOS AQUÍ
 export default async function Exito({
     searchParams,
 }: {
@@ -7,22 +12,34 @@ export default async function Exito({
     const sessionId = searchParams.session_id
 
     if (!sessionId) {
-        return <div>No se encontró session_id</div>
+        return (
+            <div>
+                <h1>No se encontró la sesión</h1>
+                <Link href="/">Volver al inicio</Link>
+            </div>
+        )
     }
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/checkout-session?session_id=${sessionId}`, {
-        cache: 'no-store',
-    })
+    const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/checkout-session?session_id=${sessionId}`,
+        { cache: 'no-store' }
+    )
 
     if (!res.ok) {
-        return <div>Error al obtener la sesión</div>
+        return (
+            <div>
+                <h1>Error al obtener la sesión</h1>
+                <Link href="/">Volver al inicio</Link>
+            </div>
+        )
     }
 
     const session = await res.json()
 
     return (
-        <div>
-            <h1>Compra Exitosa</h1>
+        <div className="text-white p-8">
+            <CheckCircle2 className="text-green-500 w-12 h-12" />
+            <h1>¡Compra exitosa!</h1>
             <pre>{JSON.stringify(session, null, 2)}</pre>
         </div>
     )
