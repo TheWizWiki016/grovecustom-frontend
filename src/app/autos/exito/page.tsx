@@ -1,16 +1,13 @@
+// ✅ page.tsx CORRECTO y funcionando con Stripe session_id
 export default async function Exito({
     searchParams,
 }: {
-    searchParams?: { [key: string]: string | string[] | undefined }
+    searchParams: { session_id?: string }
 }) {
-    const sessionId = searchParams?.session_id as string | undefined
+    const sessionId = searchParams.session_id
 
     if (!sessionId) {
-        return (
-            <div>
-                <h1>No se encontró el session_id</h1>
-            </div>
-        )
+        return <div>No se encontró session_id</div>
     }
 
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/checkout-session?session_id=${sessionId}`, {
@@ -25,7 +22,7 @@ export default async function Exito({
 
     return (
         <div>
-            <h1>Compra exitosa</h1>
+            <h1>Compra Exitosa</h1>
             <pre>{JSON.stringify(session, null, 2)}</pre>
         </div>
     )
