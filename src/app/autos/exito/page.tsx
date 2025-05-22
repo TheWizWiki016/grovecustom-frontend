@@ -36,7 +36,7 @@ export default async function Exito({ searchParams }: ExitoProps) {
         )
     }
 
-    const res = await fetch(`http://localhost:5000/api/checkout-session?session_id=${sessionId}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/checkout-session?session_id=${sessionId}`, {
         cache: 'no-store', // para que siempre haga fetch fresco
     })
 

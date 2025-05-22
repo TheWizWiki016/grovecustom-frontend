@@ -42,7 +42,7 @@ export default function DetalleAutoPage() {
 
     useEffect(() => {
         const fetchAuto = async () => {
-            const res = await fetch(`http://localhost:5000/api/autos/${id}`)
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/autos/${id}`)
             const data = await res.json()
             setAuto(data)
         }
