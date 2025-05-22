@@ -25,8 +25,9 @@ export default function AdminDashboardPage() {
     const [autos, setAutos] = useState<Auto[]>([])
     const [loading, setLoading] = useState(true)
     const [searchTerm, setSearchTerm] = useState('')
-    const [sortField, setSortField] = useState('marca')
-    const [sortDirection, setSortDirection] = useState('asc')
+    type SortableField = 'marca' | 'modelo' | 'año' | 'precio'
+    const [sortField, setSortField] = useState<SortableField>('marca')
+    const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
     const [filterCategory, setFilterCategory] = useState('')
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
     const [selectedAuto, setSelectedAuto] = useState(null)
@@ -110,10 +111,11 @@ export default function AdminDashboardPage() {
     }
 
     // Función para ordenar
-    const handleSort = (field: string) => {
+    const handleSort = (field: SortableField) => {
         setSortDirection(sortField === field && sortDirection === 'asc' ? 'desc' : 'asc')
         setSortField(field)
     }
+
 
     // Filtrar y ordenar autos
     const filteredAndSortedAutos = autos
@@ -130,13 +132,13 @@ export default function AdminDashboardPage() {
             if (sortField === 'año' || sortField === 'precio') {
                 // Ordenar numéricamente
                 return sortDirection === 'asc'
-                    ? a[sortField] - b[sortField]
-                    : b[sortField] - a[sortField]
+                    ? (a[sortField] as number) - (b[sortField] as number)
+                    : (b[sortField] as number) - (a[sortField] as number)
             } else {
                 // Ordenar alfabéticamente
                 return sortDirection === 'asc'
-                    ? a[sortField].localeCompare(b[sortField])
-                    : b[sortField].localeCompare(a[sortField])
+                    ? String(a[sortField] as string).localeCompare(String(b[sortField] as string))
+                    : String(b[sortField] as string).localeCompare(String(a[sortField] as string))
             }
         })
 
