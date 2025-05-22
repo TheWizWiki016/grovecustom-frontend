@@ -4,6 +4,7 @@
 import { useState, useEffect } from 'react'
 import { Car, Crown, Star, Award, Shield, Users, Clock, Phone, Mail, MapPin, Send, CheckCircle, Zap } from 'lucide-react'
 import Link from 'next/link'
+import Footer from '@/components/Footer'
 
 
 export default function AboutContactPage() {
@@ -383,6 +384,7 @@ export default function AboutContactPage() {
                     </div>
                 </div>
             </section>
+            <Footer />
         </div>
     )
 }

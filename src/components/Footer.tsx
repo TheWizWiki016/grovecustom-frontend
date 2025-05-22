@@ -1,88 +1,230 @@
-// src/components/Footer.tsx
-export default function Footer() {
+import React from 'react';
+import {
+    Mail,
+    Phone,
+    MapPin,
+    Facebook,
+    Instagram,
+    Twitter,
+    Youtube,
+    Car,
+    Award,
+    Shield,
+    Clock,
+    ArrowUp
+} from 'lucide-react';
+
+export default function ImprovedFooter() {
+    const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
     return (
-        <footer className="bg-gradient-to-t from-[#393E41] to-[#2c2f31] mt-12 text-gray-300">
-            <div className="container mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-3 gap-10">
-                <div>
-                    <h3 className="text-3xl font-extrabold text-[#E7BB41] mb-5">Grove Custom</h3>
-                    <p className="text-gray-400 max-w-sm leading-relaxed">
-                        La experiencia definitiva en autos de lujo personalizados. Calidad, estilo y exclusividad en cada detalle.
-                    </p>
-                </div>
-                <div>
-                    <h3 className="text-3xl font-extrabold text-[#E7BB41] mb-5">Contacto</h3>
-                    <ul className="space-y-3 text-gray-400">
-                        <li>
-                            Email:{" "}
-                            <a href="mailto:info@grovecustom.com" className="hover:text-[#E7BB41] underline">
-                                info@grovecustom.com
-                            </a>
-                        </li>
-                        <li>
-                            Teléfono:{" "}
-                            <a href="tel:+1234567890" className="hover:text-[#E7BB41] underline">
-                                (123) 456-7890
-                            </a>
-                        </li>
-                        <li>Dirección: Luxury Avenue #123</li>
-                    </ul>
-                </div>
-                <div>
-                    <h3 className="text-3xl font-extrabold text-[#E7BB41] mb-5">Síguenos</h3>
-                    <div className="flex space-x-6 mt-3 text-[#E7BB41]">
-                        {/* Facebook */}
-                        <a href="#" aria-label="Facebook" className="hover:text-yellow-400 transition-colors duration-300">
-                            <svg
-                                className="w-7 h-7"
-                                fill="currentColor"
-                                viewBox="0 0 24 24"
-                                aria-hidden="true"
-                            >
-                                <path d="M22.675 0h-21.35C.6 0 0 .6 0 1.342v21.316C0 23.4.6 24 1.325 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.894-4.788 4.659-4.788 1.325 0 2.466.099 2.797.143v3.24l-1.92.001c-1.504 0-1.796.715-1.796 1.764v2.31h3.587l-.467 3.622h-3.12V24h6.116C23.4 24 24 23.4 24 22.658V1.342C24 .6 23.4 0 22.675 0z" />
-                            </svg>
-                        </a>
-                        {/* Instagram */}
-                        <a href="#" aria-label="Instagram" className="hover:text-yellow-400 transition-colors duration-300">
-                            <svg
-                                className="w-7 h-7"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                viewBox="0 0 24 24"
-                                aria-hidden="true"
-                            >
-                                <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
-                                <path d="M16 11.37a4 4 0 11-7.999-.001 4 4 0 017.999 0z" />
-                                <line x1="17.5" y1="6.5" x2="17.5" y2="6.5" />
-                            </svg>
-                        </a>
-                        {/* Twitter */}
-                        <a href="#" aria-label="Twitter" className="hover:text-yellow-400 transition-colors duration-300">
-                            <svg
-                                className="w-7 h-7"
-                                fill="currentColor"
-                                viewBox="0 0 24 24"
-                                aria-hidden="true"
-                            >
-                                <path d="M23 3a10.9 10.9 0 01-3.14.86 4.48 4.48 0 001.98-2.48 9.05 9.05 0 01-2.88 1.1 4.52 4.52 0 00-7.7 4.12 12.83 12.83 0 01-9.32-4.7 4.52 4.52 0 001.4 6.04A4.5 4.5 0 012 9.71v.06a4.52 4.52 0 003.63 4.43 4.48 4.48 0 01-2.05.08 4.53 4.53 0 004.22 3.14 9 9 0 01-5.59 1.92A9.15 9.15 0 012 19.52a12.79 12.79 0 006.93 2.03c8.32 0 12.88-6.9 12.88-12.87 0-.2 0-.42-.02-.63A9.22 9.22 0 0023 3z" />
-                            </svg>
-                        </a>
-                        {/* YouTube */}
-                        <a href="#" aria-label="YouTube" className="hover:text-yellow-400 transition-colors duration-300">
-                            <svg
-                                className="w-7 h-7"
-                                fill="currentColor"
-                                viewBox="0 0 24 24"
-                                aria-hidden="true"
-                            >
-                                <path d="M19.615 3.184c-1.17-.14-5.866-.14-5.866-.14s-4.7 0-5.87.14A3.13 3.13 0 005.152 4.8C5 6.012 5 9.556 5 9.556s0 3.543.152 4.756a3.13 3.13 0 001.727 1.618c1.17.14 5.866.14 5.866.14s4.7 0 5.87-.14a3.13 3.13 0 001.728-1.618c.15-1.212.15-4.756.15-4.756s0-3.543-.15-4.756a3.13 3.13 0 00-1.727-1.617zM10.4 13.794v-5.57l4.75 2.785-4.75 2.785z" />
-                            </svg>
-                        </a>
+        <footer className="relative bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white overflow-hidden">
+            {/* Decorative Background Elements */}
+            <div className="absolute inset-0 opacity-5">
+                <div className="absolute top-10 left-10 w-32 h-32 border-2 border-yellow-400 rounded-full"></div>
+                <div className="absolute bottom-20 right-20 w-24 h-24 border border-yellow-400 rotate-45"></div>
+                <div className="absolute top-1/2 left-1/4 w-16 h-16 bg-yellow-400 rounded-full blur-xl"></div>
+            </div>
+
+            <div className="relative z-10">
+                {/* Main Footer Content */}
+                <div className="container mx-auto px-6 py-16">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+
+                        {/* Brand Section */}
+                        <div className="lg:col-span-1">
+                            <div className="flex items-center gap-3 mb-6">
+                                <div className="bg-gradient-to-r from-yellow-400 to-yellow-600 p-3 rounded-xl">
+                                    <Car className="w-8 h-8 text-black" />
+                                </div>
+                                <div>
+                                    <h3 className="text-3xl font-bold bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">
+                                        Grove Custom
+                                    </h3>
+                                    <p className="text-yellow-400 text-sm font-medium">LUXURY CARS</p>
+                                </div>
+                            </div>
+                            <p className="text-gray-300 leading-relaxed mb-6">
+                                La experiencia definitiva en autos de lujo personalizados. Calidad, estilo y exclusividad en cada detalle que define la perfección automotriz.
+                            </p>
+
+                            {/* Value Props */}
+                            <div className="space-y-3 text-sm">
+                                <div className="flex items-center gap-3 text-gray-300">
+                                    <Award className="w-4 h-4 text-yellow-400" />
+                                    <span>Calidad Premium Garantizada</span>
+                                </div>
+                                <div className="flex items-center gap-3 text-gray-300">
+                                    <Shield className="w-4 h-4 text-yellow-400" />
+                                    <span>Servicio Post-Venta Exclusivo</span>
+                                </div>
+                                <div className="flex items-center gap-3 text-gray-300">
+                                    <Clock className="w-4 h-4 text-yellow-400" />
+                                    <span>Disponible 24/7</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Contact Section */}
+                        <div>
+                            <h4 className="text-xl font-bold text-white mb-6 relative">
+                                Contacto
+                                <div className="absolute -bottom-2 left-0 w-12 h-1 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full"></div>
+                            </h4>
+                            <div className="space-y-4">
+                                <div className="group">
+                                    <a
+                                        href="mailto:info@grovecustom.com"
+                                        className="flex items-center gap-3 text-gray-300 hover:text-yellow-400 transition-all duration-300 group-hover:translate-x-1"
+                                    >
+                                        <div className="bg-gray-800 p-2 rounded-lg group-hover:bg-yellow-400 group-hover:text-black transition-all duration-300">
+                                            <Mail className="w-4 h-4" />
+                                        </div>
+                                        <div>
+                                            <p className="text-xs text-gray-500 uppercase tracking-wide">Email</p>
+                                            <p className="font-medium">info@grovecustom.com</p>
+                                        </div>
+                                    </a>
+                                </div>
+
+                                <div className="group">
+                                    <a
+                                        href="tel:+1234567890"
+                                        className="flex items-center gap-3 text-gray-300 hover:text-yellow-400 transition-all duration-300 group-hover:translate-x-1"
+                                    >
+                                        <div className="bg-gray-800 p-2 rounded-lg group-hover:bg-yellow-400 group-hover:text-black transition-all duration-300">
+                                            <Phone className="w-4 h-4" />
+                                        </div>
+                                        <div>
+                                            <p className="text-xs text-gray-500 uppercase tracking-wide">Teléfono</p>
+                                            <p className="font-medium">(123) 456-7890</p>
+                                        </div>
+                                    </a>
+                                </div>
+
+                                <div className="group">
+                                    <div className="flex items-center gap-3 text-gray-300 group-hover:translate-x-1 transition-all duration-300">
+                                        <div className="bg-gray-800 p-2 rounded-lg">
+                                            <MapPin className="w-4 h-4" />
+                                        </div>
+                                        <div>
+                                            <p className="text-xs text-gray-500 uppercase tracking-wide">Ubicación</p>
+                                            <p className="font-medium">Luxury Avenue #123</p>
+                                            <p className="text-sm text-gray-400">Ciudad de México</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Services Section */}
+                        <div>
+                            <h4 className="text-xl font-bold text-white mb-6 relative">
+                                Servicios
+                                <div className="absolute -bottom-2 left-0 w-12 h-1 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full"></div>
+                            </h4>
+                            <ul className="space-y-3 text-gray-300">
+                                <li><a href="#" className="hover:text-yellow-400 transition-colors duration-300 hover:translate-x-1 inline-block">Venta de Autos de Lujo</a></li>
+                                <li><a href="#" className="hover:text-yellow-400 transition-colors duration-300 hover:translate-x-1 inline-block">Personalización Completa</a></li>
+                                <li><a href="#" className="hover:text-yellow-400 transition-colors duration-300 hover:translate-x-1 inline-block">Mantenimiento Premium</a></li>
+                                <li><a href="#" className="hover:text-yellow-400 transition-colors duration-300 hover:translate-x-1 inline-block">Financiamiento VIP</a></li>
+                                <li><a href="#" className="hover:text-yellow-400 transition-colors duration-300 hover:translate-x-1 inline-block">Seguros Especializados</a></li>
+                                <li><a href="#" className="hover:text-yellow-400 transition-colors duration-300 hover:translate-x-1 inline-block">Concierge Automotriz</a></li>
+                            </ul>
+                        </div>
+
+                        {/* Social Media & Newsletter */}
+                        <div>
+                            <h4 className="text-xl font-bold text-white mb-6 relative">
+                                Conecta con Nosotros
+                                <div className="absolute -bottom-2 left-0 w-12 h-1 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full"></div>
+                            </h4>
+
+                            {/* Social Media Icons */}
+                            <div className="flex gap-3 mb-8">
+                                <a
+                                    href="#"
+                                    className="bg-gray-800 p-3 rounded-xl hover:bg-gradient-to-r hover:from-yellow-400 hover:to-yellow-600 hover:text-black transition-all duration-300 hover:scale-110 hover:rotate-12"
+                                    aria-label="Facebook"
+                                >
+                                    <Facebook className="w-5 h-5" />
+                                </a>
+                                <a
+                                    href="#"
+                                    className="bg-gray-800 p-3 rounded-xl hover:bg-gradient-to-r hover:from-yellow-400 hover:to-yellow-600 hover:text-black transition-all duration-300 hover:scale-110 hover:rotate-12"
+                                    aria-label="Instagram"
+                                >
+                                    <Instagram className="w-5 h-5" />
+                                </a>
+                                <a
+                                    href="#"
+                                    className="bg-gray-800 p-3 rounded-xl hover:bg-gradient-to-r hover:from-yellow-400 hover:to-yellow-600 hover:text-black transition-all duration-300 hover:scale-110 hover:rotate-12"
+                                    aria-label="Twitter"
+                                >
+                                    <Twitter className="w-5 h-5" />
+                                </a>
+                                <a
+                                    href="#"
+                                    className="bg-gray-800 p-3 rounded-xl hover:bg-gradient-to-r hover:from-yellow-400 hover:to-yellow-600 hover:text-black transition-all duration-300 hover:scale-110 hover:rotate-12"
+                                    aria-label="YouTube"
+                                >
+                                    <Youtube className="w-5 h-5" />
+                                </a>
+                            </div>
+
+                            {/* Newsletter Signup */}
+                            <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl p-4">
+                                <p className="text-sm text-gray-300 mb-3">
+                                    Suscríbete para recibir ofertas exclusivas
+                                </p>
+                                <div className="flex gap-2">
+                                    <input
+                                        type="email"
+                                        placeholder="tu@email.com"
+                                        className="flex-1 bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 transition-colors"
+                                    />
+                                    <button className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-4 py-2 rounded-lg text-sm font-semibold hover:from-yellow-500 hover:to-yellow-700 transition-all">
+                                        →
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div className="text-center text-gray-500 text-sm py-6 border-t border-gray-700">
-                <p>© 2025 Grove Custom. Todos los derechos reservados.</p>
+
+                {/* Bottom Bar */}
+                <div className="border-t border-gray-800 bg-black/50 backdrop-blur-sm">
+                    <div className="container mx-auto px-6 py-6">
+                        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+                            <div className="text-center md:text-left">
+                                <p className="text-gray-400 text-sm">
+                                    © 2025 Grove Custom Cars. Todos los derechos reservados.
+                                </p>
+                                <p className="text-gray-500 text-xs mt-1">
+                                    Diseñado con pasión por la excelencia automotriz
+                                </p>
+                            </div>
+
+                            <div className="flex items-center gap-6">
+                                <div className="flex gap-4 text-xs text-gray-500">
+                                    <a href="#" className="hover:text-yellow-400 transition-colors">Términos</a>
+                                    <a href="#" className="hover:text-yellow-400 transition-colors">Privacidad</a>
+                                    <a href="#" className="hover:text-yellow-400 transition-colors">Cookies</a>
+                                </div>
+
+                                <button
+                                    onClick={scrollToTop}
+                                    className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black p-2 rounded-full hover:from-yellow-500 hover:to-yellow-700 transition-all hover:scale-110 group"
+                                    aria-label="Volver arriba"
+                                >
+                                    <ArrowUp className="w-4 h-4 group-hover:animate-bounce" />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </footer>
     );
