@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
     ],
   },
   eslint: {
-    ignoreDuringBuilds: true, // 👈 esto evita que ESLint detenga el build
+    ignoreDuringBuilds: true,
   },
 }
 

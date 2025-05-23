@@ -1,0 +1,55 @@
+'use client';
+import { useEffect, useState } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
+
+export default function VerifyPage() {
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
+    type User = { email: string };
+    const [user, setUser] = useState<User | null>(null);
+
+    useEffect(() => {
+        const token = searchParams.get('token');
+        if (!token) {
+            setError('Token no encontrado en la URL');
+            setLoading(false);
+            return;
+        }
+
+        // Llamar al backend para verificar el token
+        fetch('https://grovecustom-backend.onrender.com/api/auth/verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token }),
+        })
+            .then(async res => {
+                if (!res.ok) {
+                    const data = await res.json();
+                    throw new Error(data.error || 'Error al verificar token');
+                }
+                return res.json();
+            })
+            .then(data => {
+                setUser(data.user);
+                setLoading(false);
+                // Opcional: redirigir o guardar sesión localmente
+                // router.push('/dashboard');
+            })
+            .catch(err => {
+                setError(err.message);
+                setLoading(false);
+            });
+    }, [searchParams]);
+
+    if (loading) return <p>Verificando...</p>;
+    if (error) return <p>Error: {error}</p>;
+
+    return (
+        <div>
+            <h1>Bienvenido, {user?.email}</h1>
+            <p>Has iniciado sesión correctamente con magic link.</p>
+        </div>
+    );
+}
