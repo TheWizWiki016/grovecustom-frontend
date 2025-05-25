@@ -19,7 +19,7 @@
     "incremental": true,
     "types": [
       "next-auth",
-      "./types/next-auth.d.ts"
+      "./src/app/types/next-auth.d.ts",
     ],
     "plugins": [
       {
