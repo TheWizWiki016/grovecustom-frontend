@@ -5,14 +5,17 @@ export const useFilters = (autos: Auto[]) => {
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
     const [showFilters, setShowFilters] = useState(false);
+    const [minPrice, setMinPrice] = useState(0);
+    const [maxPrice, setMaxPrice] = useState(Infinity);
 
-    // Get unique categories
     const categories = useMemo(() => {
-        const uniqueCategories = [...new Set(autos.map(auto => auto.categoria).filter((cat): cat is string => typeof cat === 'string'))];
+        const uniqueCategories = [...new Set(
+            autos.map(auto => auto.categoria)
+                .filter((cat): cat is string => typeof cat === 'string')
+        )];
         return uniqueCategories.sort();
     }, [autos]);
 
-    // Filter autos
     const filteredAutos = useMemo(() => {
         return autos.filter(auto => {
             const matchesSearch =
@@ -25,11 +28,15 @@ export const useFilters = (autos: Auto[]) => {
                 selectedCategories.length === 0 ||
                 (auto.categoria && selectedCategories.includes(auto.categoria));
 
-            return matchesSearch && matchesCategory;
-        });
-    }, [autos, searchTerm, selectedCategories]);
+            const matchesPrice =
+                typeof auto.precio === 'number' &&
+                auto.precio >= minPrice &&
+                auto.precio <= maxPrice;
 
-    // Group autos by category
+            return matchesSearch && matchesCategory && matchesPrice;
+        });
+    }, [autos, searchTerm, selectedCategories, minPrice, maxPrice]);
+
     const autosByCategory = useMemo(() => {
         const grouped: { [key: string]: Auto[] } = {};
 
@@ -55,6 +62,8 @@ export const useFilters = (autos: Auto[]) => {
     const clearFilters = () => {
         setSelectedCategories([]);
         setSearchTerm("");
+        setMinPrice(0);
+        setMaxPrice(Infinity);
     };
 
     return {
@@ -67,6 +76,10 @@ export const useFilters = (autos: Auto[]) => {
         filteredAutos,
         autosByCategory,
         toggleCategory,
-        clearFilters
+        clearFilters,
+        minPrice,
+        maxPrice,
+        setMinPrice,
+        setMaxPrice
     };
 };

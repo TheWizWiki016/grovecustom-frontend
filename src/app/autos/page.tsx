@@ -21,7 +21,11 @@ export default function AutosPage() {
         filteredAutos,
         autosByCategory,
         toggleCategory,
-        clearFilters
+        clearFilters,
+        minPrice,
+        maxPrice,
+        setMinPrice,
+        setMaxPrice
     } = useFilters(autos);
 
     if (loading) {
@@ -41,6 +45,10 @@ export default function AutosPage() {
                 categories={categories}
                 onToggleCategory={toggleCategory}
                 onClearFilters={clearFilters}
+                minPrice={minPrice}
+                maxPrice={maxPrice}
+                setMinPrice={setMinPrice}
+                setMaxPrice={setMaxPrice}
             />
 
             <ResultsCounter
