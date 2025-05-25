@@ -176,7 +176,8 @@ export default function ImprovedHeader() {
 
             {/* Mobile Navigation Menu */}
             {mobileMenuOpen && (
-                <div className="lg:hidden bg-gray-900/95 backdrop-blur-md border-t border-gray-800">
+                <div className="lg:hidden bg-gray-900 border-t border-gray-800 backdrop-blur-none bg-opacity-100">
+
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
                         <nav className="space-y-2">
                             {navigationItems.map((item) => {
@@ -204,7 +205,7 @@ export default function ImprovedHeader() {
                             ) : session ? (
                                 <div className="space-y-2">
                                     {/* User Info */}
-                                    <div className="px-4 py-2 bg-gray-800/50 rounded-xl">
+                                    <div className="px-4 py-2 bg-gray-800 rounded-xl">
                                         <div className="flex items-center gap-3">
                                             {session.user?.image ? (
                                                 <img
@@ -280,7 +281,7 @@ export default function ImprovedHeader() {
             {/* Overlay for dropdowns */}
             {(mobileMenuOpen || userMenuOpen) && (
                 <div
-                    className="fixed inset-0 bg-black/20 backdrop-blur-sm lg:hidden z-40"
+                    className="fixed inset-0 bg-black/20  lg:hidden z-40"
                     onClick={() => {
                         setMobileMenuOpen(false);
                         setUserMenuOpen(false);
