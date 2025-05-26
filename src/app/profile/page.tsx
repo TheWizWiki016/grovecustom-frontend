@@ -29,14 +29,18 @@ export default function ProfilePage() {
     const [profileData, setProfileData] = useState({
         nombre: session?.user?.nombre || "",
         email: session?.user?.email || "",
-        telefono: session?.user?.telefono || "",
-        direccion: session?.user?.direccion || "",
-        ciudad: session?.user?.ciudad || "",
-        codigoPostal: session?.user?.codigoPostal || "",
-        fechaNacimiento: session?.user?.fechaNacimiento || "",
-        profesion: session?.user?.profesion || "",
-        intereses: session?.user?.intereses || "",
-        marcaFavorita: session?.user?.marcaFavorita || "",
+
+
+        // telefono: session?.user?.telefono || "",
+        // direccion: session?.user?.direccion || "",
+        // ciudad: session?.user?.ciudad || "",
+        // codigoPostal: session?.user?.codigoPostal || "",
+        // fechaNacimiento: session?.user?.fechaNacimiento || "",
+        // profesion: session?.user?.profesion || "",
+        // intereses: session?.user?.intereses || "",
+        // marcaFavorita: session?.user?.marcaFavorita || "",
+
+
     });
 
     const [loading, setLoading] = useState(false);
@@ -246,7 +250,7 @@ export default function ProfilePage() {
                                         <input
                                             type="date"
                                             name="fechaNacimiento"
-                                            value={profileData.fechaNacimiento}
+                                            //value={profileData.fechaNacimiento}
                                             onChange={handleInputChange}
                                             className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
                                         />
@@ -256,7 +260,7 @@ export default function ProfilePage() {
                                         <input
                                             type="text"
                                             name="profesion"
-                                            value={profileData.profesion}
+                                            //value={profileData.profesion}
                                             onChange={handleInputChange}
                                             className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
                                             placeholder="¿A qué te dedicas?"
@@ -291,7 +295,7 @@ export default function ProfilePage() {
                                         <input
                                             type="tel"
                                             name="telefono"
-                                            value={profileData.telefono}
+                                            //value={profileData.telefono}
                                             onChange={handleInputChange}
                                             className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
                                             placeholder="+1 (555) 123-4567"
@@ -302,7 +306,7 @@ export default function ProfilePage() {
                                         <input
                                             type="text"
                                             name="direccion"
-                                            value={profileData.direccion}
+                                            //value={profileData.direccion}
                                             onChange={handleInputChange}
                                             className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
                                             placeholder="123 Luxury Avenue"
@@ -313,7 +317,7 @@ export default function ProfilePage() {
                                         <input
                                             type="text"
                                             name="ciudad"
-                                            value={profileData.ciudad}
+                                            //value={profileData.ciudad}
                                             onChange={handleInputChange}
                                             className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
                                             placeholder="Beverly Hills"
@@ -324,7 +328,7 @@ export default function ProfilePage() {
                                         <input
                                             type="text"
                                             name="codigoPostal"
-                                            value={profileData.codigoPostal}
+                                            //value={profileData.codigoPostal}
                                             onChange={handleInputChange}
                                             className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
                                             placeholder="90210"
@@ -346,7 +350,7 @@ export default function ProfilePage() {
                                         <label className="block text-white font-semibold mb-2">Marca Favorita</label>
                                         <select
                                             name="marcaFavorita"
-                                            value={profileData.marcaFavorita}
+                                            //value={profileData.marcaFavorita}
                                             onChange={handleInputChange}
                                             className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-3 text-white focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
                                         >
@@ -360,7 +364,7 @@ export default function ProfilePage() {
                                         <label className="block text-white font-semibold mb-2">Intereses Automotrices</label>
                                         <textarea
                                             name="intereses"
-                                            value={profileData.intereses}
+                                            //value={profileData.intereses}
                                             onChange={handleInputChange}
                                             rows={4}
                                             className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all resize-none"
