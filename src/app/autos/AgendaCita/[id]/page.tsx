@@ -277,7 +277,7 @@ export default function AgendarCitaPage() {
             });
             setAppointmentData(prev => ({
                 ...prev,
-                email: session.user.email
+                email: session.user.email ?? ''
             }));
         } else {
             setUser(null);
@@ -535,7 +535,11 @@ export default function AgendarCitaPage() {
                         <div className="mb-4 sm:mb-6">
                             <div className="flex items-center justify-between mb-4">
                                 <button
-                                    onClick={() => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1))}
+                                    onClick={() => {
+                                        if (currentDate) {
+                                            setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1));
+                                        }
+                                    }}
                                     className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
                                 >
                                     <ChevronLeft size={18} className="sm:w-5 sm:h-5" />
@@ -566,31 +570,32 @@ export default function AgendarCitaPage() {
 
                             {/* Días del mes */}
                             <div className="grid grid-cols-7 gap-1">
-                                {getDaysInMonth(currentDate).map((day, index) => {
-                                    const isAvailable = day.isCurrentMonth && isDateAvailable(day.date);
-                                    const isSelected = selectedDate && day.date.toDateString() === selectedDate.toDateString();
+                                {currentDate &&
+                                    getDaysInMonth(currentDate).map((day, index) => {
+                                        const isAvailable = day.isCurrentMonth && isDateAvailable(day.date);
+                                        const isSelected = selectedDate && day.date.toDateString() === selectedDate.toDateString();
 
-                                    return (
-                                        <button
-                                            key={index}
-                                            onClick={() => selectDate(day.date)}
-                                            disabled={!isAvailable}
-                                            className={`
-                                                p-2 sm:p-3 text-xs sm:text-sm rounded-lg transition-all duration-200 min-h-[32px] sm:min-h-[40px]
-                                                ${!day.isCurrentMonth
-                                                    ? 'text-gray-600 cursor-not-allowed'
-                                                    : isAvailable
-                                                        ? isSelected
-                                                            ? 'bg-yellow-500 text-black font-bold'
-                                                            : 'hover:bg-gray-700 text-white'
-                                                        : 'text-gray-600 cursor-not-allowed'
-                                                }
-                                            `}
-                                        >
-                                            {day.date.getDate()}
-                                        </button>
-                                    );
-                                })}
+                                        return (
+                                            <button
+                                                key={index}
+                                                onClick={() => selectDate(day.date)}
+                                                disabled={!isAvailable}
+                                                className={`
+                                                    p-2 sm:p-3 text-xs sm:text-sm rounded-lg transition-all duration-200 min-h-[32px] sm:min-h-[40px]
+                                                    ${!day.isCurrentMonth
+                                                        ? 'text-gray-600 cursor-not-allowed'
+                                                        : isAvailable
+                                                            ? isSelected
+                                                                ? 'bg-yellow-500 text-black font-bold'
+                                                                : 'hover:bg-gray-700 text-white'
+                                                            : 'text-gray-600 cursor-not-allowed'
+                                                    }
+                                                `}
+                                            >
+                                                {day.date.getDate()}
+                                            </button>
+                                        );
+                                    })}
                             </div>
                         </div>
 
