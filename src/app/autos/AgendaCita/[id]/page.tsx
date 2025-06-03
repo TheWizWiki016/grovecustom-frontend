@@ -372,7 +372,7 @@ export default function AgendarCitaPage() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    autoId: auto._id,
+                    autoId: auto ? auto._id : '',
                     usuarioId: user._id,
                     fechaCita: appointmentData.fechaCita,
                     horaCita: appointmentData.horaCita,
