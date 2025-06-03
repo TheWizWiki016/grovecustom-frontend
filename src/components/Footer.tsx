@@ -126,14 +126,15 @@ export default function ImprovedFooter() {
                                 <div className="absolute -bottom-2 left-0 w-12 h-1 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full"></div>
                             </h4>
                             <ul className="space-y-3 text-gray-300">
-                                <li><a href="#" className="hover:text-yellow-400 transition-colors duration-300 hover:translate-x-1 inline-block">Venta de Autos de Lujo</a></li>
-                                <li><a href="#" className="hover:text-yellow-400 transition-colors duration-300 hover:translate-x-1 inline-block">Personalización Completa</a></li>
-                                <li><a href="#" className="hover:text-yellow-400 transition-colors duration-300 hover:translate-x-1 inline-block">Mantenimiento Premium</a></li>
-                                <li><a href="#" className="hover:text-yellow-400 transition-colors duration-300 hover:translate-x-1 inline-block">Financiamiento VIP</a></li>
-                                <li><a href="#" className="hover:text-yellow-400 transition-colors duration-300 hover:translate-x-1 inline-block">Seguros Especializados</a></li>
-                                <li><a href="#" className="hover:text-yellow-400 transition-colors duration-300 hover:translate-x-1 inline-block">Concierge Automotriz</a></li>
+                                <li><a href="autos" className="hover:text-yellow-400 transition-colors duration-300 hover:translate-x-1 inline-block">Venta de Autos de Lujo</a></li>
+                                <li><a href="pagina_construccion" className="hover:text-yellow-400 transition-colors duration-300 hover:translate-x-1 inline-block">Personalización Completa</a></li>
+                                <li><a href="pagina_construccion" className="hover:text-yellow-400 transition-colors duration-300 hover:translate-x-1 inline-block">Mantenimiento Premium</a></li>
+                                <li><a href="pagina_construccion" className="hover:text-yellow-400 transition-colors duration-300 hover:translate-x-1 inline-block">Financiamiento VIP</a></li>
+                                <li><a href="pagina_construccion" className="hover:text-yellow-400 transition-colors duration-300 hover:translate-x-1 inline-block">Seguros Especializados</a></li>
+                                <li><a href="pagina_construccion" className="hover:text-yellow-400 transition-colors duration-300 hover:translate-x-1 inline-block">Concierge Automotriz</a></li>
                             </ul>
                         </div>
+
 
                         {/* Social Media & Newsletter */}
                         <div>
