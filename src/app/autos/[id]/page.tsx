@@ -8,6 +8,8 @@ import React, { useState, useEffect } from "react";
 
 
 
+
+
 import {
     Car,
     Gauge,
@@ -117,16 +119,24 @@ function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps) {
             })
 
             if (response.ok) {
-                const data = await response.json()
+                const data = await response.json();
 
-                // CAMBIO: Usar sessionStorage en lugar de localStorage para evitar problemas de SSR
-                if (typeof window !== 'undefined') {
-                    sessionStorage.setItem('token', data.token)
-                    sessionStorage.setItem('user', JSON.stringify(data.user))
+                // Si data NO tiene .user, entonces es el usuario directamente
+                const userData = data.user ? data.user : data;
+
+                // Normaliza el campo _id
+                const userToSave = {
+                    ...userData,
+                    _id: userData._id || userData.id
+                };
+
+                if (typeof window !== 'undefined' && userToSave._id) {
+                    sessionStorage.setItem('token', data.token || ''); // si no hay token, guarda string vacío
+                    sessionStorage.setItem('user', JSON.stringify(userToSave));
                 }
 
-                onLogin(data.user)
-                onClose()
+                onLogin(userToSave);
+                onClose();
             } else {
                 const errorData = await response.json()
                 setError(errorData.message || 'Error en el proceso')
@@ -261,49 +271,58 @@ export default function DetalleAutoPage() {
 
     // CAMBIO: Nuevo useEffect para manejar la verificación del usuario
     useEffect(() => {
-        setIsMounted(true)
+        setIsMounted(true);
+    }, []);
 
-        // Función para verificar si el usuario está logueado
+    useEffect(() => {
         const checkUserAuth = () => {
             if (typeof window !== 'undefined') {
+
                 const token = sessionStorage.getItem('token') || localStorage.getItem('token')
-                const userData = sessionStorage.getItem('user') || localStorage.getItem('user')
+                console.log('Token obtenido:', token)
+                if (!token) {
+                    console.log('No hay token, no se puede enviar comentario')
+                    return
+                }
+
+
+                const userData = sessionStorage.getItem('user') || localStorage.getItem('user');
 
                 if (token && userData) {
                     try {
-                        const parsedUser = JSON.parse(userData)
-                        setUser(parsedUser)
-                        console.log('Usuario autenticado:', parsedUser) // Para debug
+                        const parsedUser = JSON.parse(userData);
+                        setUser(parsedUser);
+                        console.log('Usuario autenticado:', parsedUser); // Para debug
                     } catch (error) {
-                        console.error('Error al parsear datos del usuario:', error)
+                        console.error('Error al parsear datos del usuario:', error);
                         // Limpiar datos corruptos
-                        sessionStorage.removeItem('token')
-                        sessionStorage.removeItem('user')
-                        localStorage.removeItem('token')
-                        localStorage.removeItem('user')
-                        setUser(null)
+                        sessionStorage.removeItem('token');
+                        sessionStorage.removeItem('user');
+                        localStorage.removeItem('token');
+                        localStorage.removeItem('user');
+                        setUser(null);
                     }
                 } else {
-                    setUser(null)
+                    setUser(null);
                 }
             }
-        }
+        };
 
-        checkUserAuth()
+        checkUserAuth();
 
         // CAMBIO: Escuchar cambios en sessionStorage/localStorage
         const handleStorageChange = (e: StorageEvent) => {
             if (e.key === 'user' || e.key === 'token') {
-                checkUserAuth()
+                checkUserAuth();
             }
-        }
+        };
 
-        window.addEventListener('storage', handleStorageChange)
+        window.addEventListener('storage', handleStorageChange);
 
         return () => {
-            window.removeEventListener('storage', handleStorageChange)
-        }
-    }, [])
+            window.removeEventListener('storage', handleStorageChange);
+        };
+    }, []);
 
     useEffect(() => {
         // Cargar comentarios
@@ -336,8 +355,18 @@ export default function DetalleAutoPage() {
 
     const handleLogin = (userData: User) => {
         setUser(userData)
-        // Forzar re-render del componente
         setIsMounted(true)
+        // Forzar recarga de usuario desde storage
+        if (typeof window !== 'undefined') {
+            const userData = sessionStorage.getItem('user') || localStorage.getItem('user');
+            if (userData) {
+                try {
+                    setUser(JSON.parse(userData));
+                } catch (e) {
+                    setUser(userData as any);
+                }
+            }
+        }
     }
 
     const handleLogout = () => {
@@ -352,43 +381,73 @@ export default function DetalleAutoPage() {
 
     const handleSubmitComment = async (e: React.FormEvent) => {
         e.preventDefault()
-        if (!user || !newComment.trim()) return
+        console.log('handleSubmitComment disparado');
+
+        if (!user) {
+            console.log('No hay usuario autenticado, se cancela submit')
+            return
+        }
+        if (!newComment.trim()) {
+            console.log('Comentario vacío, se cancela submit')
+            return
+        }
+        if (!id) {
+            console.log('ID de auto no definido')
+            return
+        }
+        if (!user._id) {
+            console.log('El usuario no tiene _id')
+            return
+        }
 
         setIsSubmittingComment(true)
         try {
             const token = sessionStorage.getItem('token') || localStorage.getItem('token')
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/comentarios`, {
+            console.log('Token obtenido:', token)
+            console.log('Datos enviados:', {
+                autoId: id,
+                usuarioId: user._id,
+                contenido: newComment,
+                calificacion: newRating
+            });
+
+            const response = await fetch('https://grovecustom-backend.onrender.com/api/comentarios', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     autoId: id,
+                    usuarioId: user._id,
                     contenido: newComment,
                     calificacion: newRating
                 })
-            })
+            });
+
+            console.log('Respuesta del servidor:', response.status)
 
             if (response.ok) {
                 const newCommentData = await response.json()
+                console.log('Comentario creado:', newCommentData)
+
                 setComments([newCommentData, ...comments])
                 setNewComment('')
                 setNewRating(5)
             } else {
-                // CAMBIO: Manejar errores de autenticación
+                const errorText = await response.text()
+                console.error('Error al publicar comentario:', response.status, errorText)
                 if (response.status === 401) {
                     console.log('Token expirado, cerrando sesión')
                     handleLogout()
                     setIsLoginModalOpen(true)
                 }
             }
+
         } catch (error) {
             console.error('Error al enviar comentario:', error)
         } finally {
             setIsSubmittingComment(false)
         }
     }
+
 
     const handleSubmitReply = async (parentId: string) => {
         if (!user || !replyContent.trim()) return
@@ -621,7 +680,7 @@ export default function DetalleAutoPage() {
         )
 
     return (
-        <>
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-white space-y-10">
                 {/* Header con información principal mejorado */}
                 <div className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-2xl p-8 mb-8 shadow-2xl border border-gray-700 overflow-hidden animate-fade-in-down">
@@ -712,20 +771,15 @@ export default function DetalleAutoPage() {
 
                     {/* Botones de acción mejorados */}
                     <div className="flex flex-col sm:flex-row gap-4">
-                        <button className="bg-gradient-to-r from-green-500 via-green-600 to-green-700 hover:from-green-600 hover:via-green-700 hover:to-green-800 text-white font-bold py-4 px-8 rounded-full text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3 min-w-64 group">
-                            <Phone size={24} className="group-hover:animate-pulse" />
-                            Contactar Vendedor
-                        </button>
-
-                        <button className="bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:from-blue-600 hover:via-blue-700 hover:to-blue-800 text-white font-bold py-4 px-8 rounded-full text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3 min-w-64 group">
+                        <button
+                            className="bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:from-blue-600 hover:via-blue-700 hover:to-blue-800 text-white font-bold py-4 px-8 rounded-full text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3 min-w-64 group"
+                            onClick={() => window.location.href = `/autos/AgendaCita/${auto._id}`}
+                        >
                             <Calendar size={24} className="group-hover:animate-bounce" />
                             Agendar Cita
                         </button>
 
-                        <button className="bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-700 hover:from-yellow-600 hover:via-yellow-700 hover:to-yellow-800 text-black font-bold py-4 px-8 rounded-full text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3 min-w-64 group">
-                            <Camera size={24} className="group-hover:rotate-12 transition-transform" />
-                            Solicitar Video
-                        </button>
+
                     </div>
                 </div>
 
@@ -943,7 +997,7 @@ export default function DetalleAutoPage() {
                     {/* Formulario para nuevo comentario */}
                     {status === "loading" ? (
                         <div className="text-center text-gray-400">Cargando...</div>
-                    ) : session?.user ? (
+                    ) : user ? (
                         <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700 mb-8">
                             <h3 className="text-xl font-semibold text-white mb-4">Escribe una reseña</h3>
                             <form onSubmit={handleSubmitComment} className="space-y-4">
@@ -981,10 +1035,9 @@ export default function DetalleAutoPage() {
                                 <button
                                     type="submit"
                                     disabled={isSubmittingComment || !newComment.trim()}
-                                    className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black font-bold py-3 px-6 rounded-lg transition-all duration-300 disabled:opacity-50 flex items-center gap-2"
+                                    className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black font-bold py-3 px-4 rounded-lg transition-all duration-300 disabled:opacity-50"
                                 >
-                                    <Send size={18} />
-                                    {isSubmittingComment ? 'Enviando...' : 'Enviar Reseña'}
+                                    {isSubmittingComment ? 'Publicando...' : 'Publicar Comentario'}
                                 </button>
                             </form>
                         </div>
@@ -992,7 +1045,7 @@ export default function DetalleAutoPage() {
                         <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700 mb-8 text-center">
                             <p className="text-gray-300 mb-4">Inicia sesión para escribir una reseña</p>
                             <button
-                                onClick={() => signIn()}
+                                onClick={() => setIsLoginModalOpen(true)} // <-- Cambia esto
                                 className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black font-bold py-3 px-6 rounded-lg transition-all duration-300"
                             >
                                 Iniciar Sesión
@@ -1175,6 +1228,6 @@ export default function DetalleAutoPage() {
                     </div>
                 </div>
             )}
-        </>
+        </div>
     )
 }
