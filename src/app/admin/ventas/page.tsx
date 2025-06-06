@@ -168,7 +168,7 @@ export default function VentasPage() {
         pdf.setFont("helvetica", "normal")
 
             // Datos de la tabla
-            (Object.values(resumen) as { auto: any; ventas: number; ganancia: number }[]).forEach((item, index) => {
+            ; (Object.values(resumen) as { auto: any; ventas: number; ganancia: number }[]).forEach((item, index) => {
                 // Alternar colores de fila
                 if (index % 2 === 0) {
                     pdf.setFillColor(248, 250, 252)
