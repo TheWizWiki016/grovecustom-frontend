@@ -3,14 +3,24 @@
 import dynamic from 'next/dynamic'
 import 'leaflet/dist/leaflet.css'
 
-import { MapPin } from 'lucide-react'
+// Importa los tipos correctos
+import { MapContainer as MapContainerBase, TileLayer as TileLayerBase, Marker as MarkerBase, Popup as PopupBase } from 'react-leaflet'
 
-import { MapContainerProps, MarkerProps, PopupProps } from 'react-leaflet'
-import type { TileLayerProps } from 'leaflet'
-const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false })
-const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false })
-const Marker = dynamic(() => import('react-leaflet').then(mod => mod.Marker), { ssr: false })
-const Popup = dynamic(() => import('react-leaflet').then(mod => mod.Popup), { ssr: false })
+const MapContainer = dynamic(async () => (await import('react-leaflet')).MapContainer, {
+    ssr: false,
+}) as typeof MapContainerBase
+
+const TileLayer = dynamic(async () => (await import('react-leaflet')).TileLayer, {
+    ssr: false,
+}) as typeof TileLayerBase
+
+const Marker = dynamic(async () => (await import('react-leaflet')).Marker, {
+    ssr: false,
+}) as typeof MarkerBase
+
+const Popup = dynamic(async () => (await import('react-leaflet')).Popup, {
+    ssr: false,
+}) as typeof PopupBase
 
 const position: [number, number] = [22.7589614, -102.5592065]
 

@@ -80,8 +80,8 @@ export default function MisCitasPage() {
     ];
 
     useEffect(() => {
-        if (session?.user?.id) {
-            fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/citas/usuario/${session.user.id}`)
+        if (session?.user?._id) {
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/citas/usuario/${session.user._id}`)
                 .then(res => res.json())
                 .then(data => {
                     setCitas(data);

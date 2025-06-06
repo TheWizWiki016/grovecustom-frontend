@@ -27,8 +27,8 @@ export default function MisComprasPage() {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        if (session?.user?.id) {
-            fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/ventas/usuario/${session.user.id}`)
+        if (session?.user?._id) {
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/ventas/usuario/${session.user._id}`)
                 .then(res => res.json())
                 .then(data => {
                     setVentas(data)
