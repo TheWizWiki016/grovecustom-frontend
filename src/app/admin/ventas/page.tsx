@@ -314,7 +314,7 @@ export default function VentasPage() {
                                                 <p className="text-green-100 text-sm font-medium">Ganancias Totales</p>
                                                 <p className="text-3xl font-bold text-white">
                                                     $
-                                                    {Object.values(resumen)
+                                                    {(Object.values(resumen) as { auto: any; ventas: number; ganancia: number }[])
                                                         .reduce((sum, item) => sum + item.ganancia, 0)
                                                         .toLocaleString()}
                                                 </p>
@@ -345,7 +345,7 @@ export default function VentasPage() {
                                                     $
                                                     {ventasFiltradas.length > 0
                                                         ? Math.round(
-                                                            Object.values(resumen).reduce((sum, item) => sum + item.ganancia, 0) /
+                                                            (Object.values(resumen) as { auto: any; ventas: number; ganancia: number }[]).reduce((sum, item) => sum + item.ganancia, 0) /
                                                             ventasFiltradas.length,
                                                         ).toLocaleString()
                                                         : 0}
