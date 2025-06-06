@@ -444,7 +444,7 @@ export default function VentasPage() {
                             ) : (
                                 /* Grid de tarjetas de autos */
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                                    {Object.values(resumen).map(({ auto, ventas, ganancia }, index) => (
+                                    {(Object.values(resumen) as { auto: any; ventas: any; ganancia: any }[]).map(({ auto, ventas, ganancia }, index) => (
                                         <Card
                                             key={index}
                                             className="bg-gray-800 border-gray-700 hover:border-yellow-400 transition-all group"
