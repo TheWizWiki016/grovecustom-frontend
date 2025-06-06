@@ -5,6 +5,8 @@ import 'leaflet/dist/leaflet.css'
 
 import { MapPin } from 'lucide-react'
 
+import { MapContainerProps, MarkerProps, PopupProps } from 'react-leaflet'
+import type { TileLayerProps } from 'leaflet'
 const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false })
 const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false })
 const Marker = dynamic(() => import('react-leaflet').then(mod => mod.Marker), { ssr: false })

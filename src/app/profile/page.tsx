@@ -26,17 +26,37 @@ import Link from "next/link";
 export default function ProfilePage() {
     const { data: session, status, update } = useSession();
 
+    type ExtendedUser = {
+        _id?: string;
+        email?: string | null;
+        nombre?: string | null;
+        rol?: string;
+        image?: string | null;
+        name?: string | null;
+        telefono?: string;
+        direccion?: string;
+        ciudad?: string;
+        codigoPostal?: string;
+        fechaNacimiento?: string;
+        profesion?: string;
+        intereses?: string;
+        marcaFavorita?: string;
+        id?: string;
+    };
+
+    const user = session?.user as ExtendedUser | undefined;
+
     const [profileData, setProfileData] = useState({
-        nombre: session?.user?.nombre || "",
-        email: session?.user?.email || "",
-        telefono: session?.user?.telefono || "",
-        direccion: session?.user?.direccion || "",
-        ciudad: session?.user?.ciudad || "",
-        codigoPostal: session?.user?.codigoPostal || "",
-        fechaNacimiento: session?.user?.fechaNacimiento || "",
-        profesion: session?.user?.profesion || "",
-        intereses: session?.user?.intereses || "",
-        marcaFavorita: session?.user?.marcaFavorita || "",
+        nombre: user?.nombre || "",
+        email: user?.email || "",
+        telefono: user?.telefono || "",
+        direccion: user?.direccion || "",
+        ciudad: user?.ciudad || "",
+        codigoPostal: user?.codigoPostal || "",
+        fechaNacimiento: user?.fechaNacimiento || "",
+        profesion: user?.profesion || "",
+        intereses: user?.intereses || "",
+        marcaFavorita: user?.marcaFavorita || "",
     });
 
     const [loading, setLoading] = useState(false);
@@ -81,8 +101,11 @@ export default function ProfilePage() {
         setMensaje(null);
 
         try {
+            if (!session.user || !session.user._id) {
+                throw new Error("No se pudo obtener el ID del usuario.");
+            }
             const res = await fetch(
-                `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/${session.user.id}`,
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/${session.user._id}`,
                 {
                     method: "PUT",
                     headers: {

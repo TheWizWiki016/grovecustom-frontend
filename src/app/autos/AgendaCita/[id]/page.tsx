@@ -271,13 +271,13 @@ export default function AgendarCitaPage() {
     useEffect(() => {
         if (session?.user && session.user.email) {
             setUser({
-                _id: session.user.id,
+                _id: session.user._id ?? '',
                 nombre: session.user.nombre || 'Usuario',
                 email: session.user.email,
             });
             setAppointmentData(prev => ({
                 ...prev,
-                email: session.user.email ?? ''
+                email: session.user?.email ?? ''
             }));
         } else {
             setUser(null);
