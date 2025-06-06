@@ -112,7 +112,12 @@ export default function VentasPage() {
 
         // Actualizar las estadísticas para usar datos filtrados
         const totalVentas = ventasFiltradas.length
-        const totalGanancias = Object.values(resumen).reduce((sum, item) => sum + item.ganancia, 0)
+
+        const totalGanancias = (Object.values(resumen) as { auto: any; ventas: number; ganancia: number }[]).reduce(
+            (sum, item) => sum + item.ganancia,
+            0
+        )
+
         const modelosVendidos = Object.keys(resumen).length
 
         pdf.setFontSize(12)
