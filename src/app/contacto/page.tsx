@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react'
 import { Car, Crown, Star, Award, Shield, Users, Clock, Phone, Mail, MapPin, Send, CheckCircle, Zap } from 'lucide-react'
 import Link from 'next/link'
 import Footer from '@/components/Footer'
-import MapaLeaflet from '@/components/MapaLeaflet'
+
 
 
 
@@ -204,56 +204,6 @@ export default function AboutContactPage() {
                                 </div>
                             </div>
                         ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* Contact Section */}
-            <section className="py-20 px-6 bg-gray-800/20">
-                <div className="max-w-7xl mx-auto">
-                    <h2 className="text-5xl font-bold text-center mb-16 bg-gradient-to-r from-yellow-400 to-white bg-clip-text text-transparent">
-                        Contáctanos
-                    </h2>
-                    <div className="grid lg:grid-cols-2 gap-16">
-                        {/* Contact Information */}
-                        <div className="space-y-8">
-                            <div>
-                                <h3 className="text-3xl font-bold text-white mb-8">Información de Contacto</h3>
-                                <div className="space-y-6">
-                                    <div className="flex items-center gap-4 group">
-                                        <div className="w-12 h-12 bg-yellow-400/20 rounded-full flex items-center justify-center group-hover:bg-yellow-400/30 transition-colors">
-                                            <MapPin className="w-6 h-6 text-yellow-400" />
-                                        </div>
-                                        <div>
-                                            <p className="text-white font-semibold">Dirección</p>
-                                            <p className="text-gray-400">123 Luxury Avenue, Beverly Hills, CA 90210</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center gap-4 group">
-                                        <div className="w-12 h-12 bg-yellow-400/20 rounded-full flex items-center justify-center group-hover:bg-yellow-400/30 transition-colors">
-                                            <Phone className="w-6 h-6 text-yellow-400" />
-                                        </div>
-                                        <div>
-                                            <p className="text-white font-semibold">Teléfono</p>
-                                            <p className="text-gray-400">+1 (555) 123-4567</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center gap-4 group">
-                                        <div className="w-12 h-12 bg-yellow-400/20 rounded-full flex items-center justify-center group-hover:bg-yellow-400/30 transition-colors">
-                                            <Mail className="w-6 h-6 text-yellow-400" />
-                                        </div>
-                                        <div>
-                                            <p className="text-white font-semibold">Email</p>
-                                            <p className="text-gray-400">info@grovecustomcars.com</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Map */}
-                            <MapaLeaflet />
-                        </div>
-
                     </div>
                 </div>
             </section>
