@@ -4,10 +4,7 @@ import { useParams } from 'next/navigation'
 import Image from 'next/image'
 import { useSession, signIn } from "next-auth/react";
 import React, { useState, useEffect } from "react";
-
-
-
-
+import { loadStripe } from '@stripe/stripe-js'
 
 
 import {
@@ -38,7 +35,8 @@ import {
     MoreVertical,
     Edit,
     Trash2,
-    Reply
+    Reply,
+    ShoppingCart
 } from 'lucide-react'
 
 interface Auto {
@@ -259,6 +257,7 @@ export default function DetalleAutoPage() {
     const [isMounted, setIsMounted] = useState(false)
     const [user, setUser] = useState<User | null>(null);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+    const [nombreAnonimo, setNombreAnonimo] = useState('');
 
     useEffect(() => {
         const fetchAuto = async () => {
@@ -275,27 +274,30 @@ export default function DetalleAutoPage() {
     }, []);
 
     useEffect(() => {
+        // Si hay usuario en NextAuth, úsalo y normaliza el _id
+        if (session?.user) {
+            const userFromSession = {
+                ...session.user,
+                _id: session.user._id || session.user.id // Normaliza el campo
+            };
+            setUser(userFromSession);
+            return;
+        }
+
+        // Si no, busca en storage como ya tienes
         const checkUserAuth = () => {
             if (typeof window !== 'undefined') {
-
                 const token = sessionStorage.getItem('token') || localStorage.getItem('token')
-                console.log('Token obtenido:', token)
-                if (!token) {
-                    console.log('No hay token, no se puede enviar comentario')
-                    return
-                }
-
-
                 const userData = sessionStorage.getItem('user') || localStorage.getItem('user');
-
                 if (token && userData) {
                     try {
                         const parsedUser = JSON.parse(userData);
+                        if (!parsedUser._id && parsedUser.id) {
+                            parsedUser._id = parsedUser.id;
+                        }
                         setUser(parsedUser);
-                        console.log('Usuario autenticado:', parsedUser); // Para debug
+                        console.log('Usuario autenticado:', parsedUser);
                     } catch (error) {
-                        console.error('Error al parsear datos del usuario:', error);
-                        // Limpiar datos corruptos
                         sessionStorage.removeItem('token');
                         sessionStorage.removeItem('user');
                         localStorage.removeItem('token');
@@ -310,7 +312,6 @@ export default function DetalleAutoPage() {
 
         checkUserAuth();
 
-        // CAMBIO: Escuchar cambios en sessionStorage/localStorage
         const handleStorageChange = (e: StorageEvent) => {
             if (e.key === 'user' || e.key === 'token') {
                 checkUserAuth();
@@ -322,7 +323,7 @@ export default function DetalleAutoPage() {
         return () => {
             window.removeEventListener('storage', handleStorageChange);
         };
-    }, []);
+    }, [session]);
 
     useEffect(() => {
         // Cargar comentarios
@@ -522,6 +523,10 @@ export default function DetalleAutoPage() {
         }
     }
 
+
+
+
+
     // Funciones existentes para el slider de imágenes
     const nextImage = () => {
         if (auto?.imagenes) {
@@ -705,11 +710,7 @@ export default function DetalleAutoPage() {
                                 </button>
                             </div>
                         ) : (
-                            <button
-                                onClick={() => setIsLoginModalOpen(true)}
-                                className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black font-bold px-6 py-2 rounded-full transition-all duration-300"
-                            >
-                                Iniciar Sesión
+                            <button>
                             </button>
                         )}
 
@@ -779,8 +780,59 @@ export default function DetalleAutoPage() {
                             Agendar Cita
                         </button>
 
+                        <button
+                            onClick={async () => {
+                                console.log('--- BOTÓN COMPRAR AHORA ---');
+                                console.log('user:', user);
+                                console.log('user?._id:', user?._id);
+                                console.log('user?.nombre:', user?.nombre);
+                                console.log('nombreAnonimo:', nombreAnonimo);
 
+                                let compradorId = user?._id || null;
+                                let compradorNombre = user?.nombre || nombreAnonimo;
+
+                                if (!compradorNombre?.trim()) {
+                                    console.log('FALTA NOMBRE: compradorNombre vacío');
+                                    alert('Ingresa tu nombre para comprar como invitado');
+                                    setIsLoginModalOpen(false);
+                                    return;
+                                }
+
+                                try {
+                                    console.log('Enviando datos al backend:', {
+                                        autoId: auto._id,
+                                        usuarioId: compradorId,
+                                        nombre: compradorNombre,
+                                        precio: auto.precio
+                                    });
+
+                                    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/pago`, {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({
+                                            autoId: auto._id,
+                                            usuarioId: compradorId,
+                                            nombre: compradorNombre,
+                                            precio: auto.precio
+                                        })
+                                    });
+                                    console.log('Respuesta fetch:', res.status);
+                                    const data = await res.json();
+                                    console.log('Respuesta Stripe:', data);
+                                    const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
+                                    await stripe?.redirectToCheckout({ sessionId: data.id });
+                                } catch (err) {
+                                    console.error('Error en compra:', err);
+                                    alert('Error al procesar la compra');
+                                }
+                            }}
+                            className="bg-gradient-to-r from-green-500 via-green-600 to-green-700 hover:from-green-600 hover:via-green-700 hover:to-green-800 text-white font-bold py-4 px-8 rounded-full text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3 min-w-64 group"
+                        >
+                            <ShoppingCart size={24} className="group-hover:animate-pulse" />
+                            Comprar Ahora
+                        </button>
                     </div>
+
                 </div>
 
                 {/* Sección de imágenes mejorada */}
@@ -984,7 +1036,7 @@ export default function DetalleAutoPage() {
                     </div>
                 </div>
 
-                {/* Sección de comentarios y reseñas */}
+                {/* Sección de comentarios y reseñas con soporte anónimo */}
                 <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-2xl p-8 shadow-2xl border border-gray-700 animate-fade-in-up">
                     <h2 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
                         <MessageCircle size={32} className="text-yellow-500" />
@@ -994,159 +1046,101 @@ export default function DetalleAutoPage() {
                         </span>
                     </h2>
 
-                    {/* Formulario para nuevo comentario */}
-                    {status === "loading" ? (
-                        <div className="text-center text-gray-400">Cargando...</div>
-                    ) : user ? (
-                        <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700 mb-8">
-                            <h3 className="text-xl font-semibold text-white mb-4">Escribe una reseña</h3>
-                            <form onSubmit={handleSubmitComment} className="space-y-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-300 mb-2">
-                                        Calificación
-                                    </label>
-                                    <div className="flex gap-2">
-                                        {[1, 2, 3, 4, 5].map((rating) => (
-                                            <button
-                                                key={rating}
-                                                type="button"
-                                                onClick={() => setNewRating(rating)}
-                                                className={`p-1 transition-colors ${rating <= newRating ? 'text-yellow-500' : 'text-gray-600'
-                                                    }`}
-                                            >
-                                                <Star size={24} fill={rating <= newRating ? 'currentColor' : 'none'} />
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-300 mb-2">
-                                        Comentario
-                                    </label>
-                                    <textarea
-                                        value={newComment}
-                                        onChange={(e) => setNewComment(e.target.value)}
-                                        placeholder="Comparte tu experiencia con este vehículo..."
-                                        className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-yellow-500 transition-colors resize-none"
-                                        rows={4}
-                                        required
-                                    />
-                                </div>
+                    {/* Formulario para nuevo comentario (autenticado o anónimo) */}
+                    <form
+                        onSubmit={async (e) => {
+                            e.preventDefault();
+                            if (!newComment.trim()) return;
+
+                            const body: any = {
+                                autoId: id,
+                                contenido: newComment,
+                                calificacion: newRating
+                            };
+
+                            if (user?._id) {
+                                body.usuarioId = user._id;
+                            } else if (nombreAnonimo?.trim()) {
+                                body.nombreAnonimo = nombreAnonimo;
+                            } else {
+                                alert('Ingresa tu nombre para comentar como anónimo');
+                                return;
+                            }
+
+                            setIsSubmittingComment(true);
+                            try {
+                                console.log('Body enviado al backend:', body); // <-- Agregado
+
+                                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/comentarios`, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify(body)
+                                });
+                                if (res.ok) {
+                                    const nuevo = await res.json();
+                                    setComments([nuevo, ...comments]);
+                                    setNewComment('');
+                                    setNombreAnonimo('');
+                                    setNewRating(5);
+                                } else {
+                                    const errorText = await res.text();
+                                    console.error('Error al enviar comentario:', res.status, errorText); // <-- Agregado
+                                    alert('Error al enviar comentario');
+                                }
+                            } finally {
+                                setIsSubmittingComment(false);
+                            }
+                        }}
+                        className="space-y-4 mb-8 bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700"
+                    >
+                        {!user && (
+                            <input
+                                type="text"
+                                placeholder="Tu nombre"
+                                value={nombreAnonimo}
+                                onChange={(e) => setNombreAnonimo(e.target.value)}
+                                className="w-full px-4 py-2 rounded bg-gray-800 border border-gray-600 text-white"
+                                required
+                            />
+                        )}
+                        <textarea
+                            placeholder="Escribe tu comentario..."
+                            value={newComment}
+                            onChange={(e) => setNewComment(e.target.value)}
+                            className="w-full px-4 py-2 rounded bg-gray-800 border border-gray-600 text-white"
+                            rows={4}
+                            required
+                        />
+                        <div className="flex gap-2">
+                            {[1, 2, 3, 4, 5].map(num => (
                                 <button
-                                    type="submit"
-                                    disabled={isSubmittingComment || !newComment.trim()}
-                                    className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black font-bold py-3 px-4 rounded-lg transition-all duration-300 disabled:opacity-50"
+                                    type="button"
+                                    key={num}
+                                    className={`px-3 py-1 rounded ${num <= newRating ? 'bg-yellow-500 text-black' : 'bg-gray-600 text-white'}`}
+                                    onClick={() => setNewRating(num)}
                                 >
-                                    {isSubmittingComment ? 'Publicando...' : 'Publicar Comentario'}
+                                    {num}
                                 </button>
-                            </form>
+                            ))}
                         </div>
-                    ) : (
-                        <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700 mb-8 text-center">
-                            <p className="text-gray-300 mb-4">Inicia sesión para escribir una reseña</p>
-                            <button
-                                onClick={() => setIsLoginModalOpen(true)} // <-- Cambia esto
-                                className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black font-bold py-3 px-6 rounded-lg transition-all duration-300"
-                            >
-                                Iniciar Sesión
-                            </button>
-                        </div>
-                    )}
+                        <button
+                            type="submit"
+                            disabled={isSubmittingComment || !newComment.trim()}
+                            className="bg-yellow-500 text-black font-bold px-6 py-2 rounded transition-all duration-300 disabled:opacity-50"
+                        >
+                            {isSubmittingComment ? 'Publicando...' : 'Publicar Comentario'}
+                        </button>
+                    </form>
 
                     {/* Lista de comentarios */}
-                    <div className="space-y-6">
-                        {comments.map((comment) => (
-                            <div key={comment._id} className="bg-gray-800/30 backdrop-blur-sm rounded-xl p-6 border border-gray-700">
-                                <div className="flex items-start justify-between mb-4">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-full flex items-center justify-center">
-                                            <User size={20} className="text-white" />
-                                        </div>
-                                        <div>
-                                            <h4 className="font-semibold text-white">{comment.usuario.nombre}</h4>
-                                            <p className="text-sm text-gray-400">{formatDate(comment.fechaCreacion)}</p>
-                                        </div>
-                                    </div>
-                                    {comment.calificacion && (
-                                        <div className="flex items-center gap-1">
-                                            {[1, 2, 3, 4, 5].map((star) => (
-                                                <Star
-                                                    key={star}
-                                                    size={16}
-                                                    className={star <= comment.calificacion ? 'text-yellow-500' : 'text-gray-600'}
-                                                    fill={star <= comment.calificacion ? 'currentColor' : 'none'}
-                                                />
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
-                                <p className="text-gray-300 mb-4">{comment.contenido}</p>
-                                <div className="flex items-center gap-4">
-                                    <button
-                                        onClick={() => handleLikeComment(comment._id, true)}
-                                        className="flex items-center gap-2 text-gray-400 hover:text-green-400 transition-colors"
-                                        disabled={!user}
-                                    >
-                                        <ThumbsUp size={16} />
-                                        <span>{comment.likes || 0}</span>
-                                    </button>
-                                    <button
-                                        onClick={() => handleLikeComment(comment._id, false)}
-                                        className="flex items-center gap-2 text-gray-400 hover:text-red-400 transition-colors"
-                                        disabled={!user}
-                                    >
-                                        <ThumbsDown size={16} />
-                                        <span>{comment.dislikes || 0}</span>
-                                    </button>
-                                    <button
-                                        onClick={() => setReplyingTo(replyingTo === comment._id ? null : comment._id)}
-                                        className="flex items-center gap-2 text-gray-400 hover:text-blue-400 transition-colors"
-                                        disabled={!user}
-                                    >
-                                        <Reply size={16} />
-                                        Responder
-                                    </button>
-                                </div>
-
-                                {/* Formulario de respuesta */}
-                                {replyingTo === comment._id && user && (
-                                    <div className="mt-4 ml-4 border-l-2 border-gray-700 pl-4">
-                                        <div className="flex gap-2">
-                                            <input
-                                                type="text"
-                                                value={replyContent}
-                                                onChange={(e) => setReplyContent(e.target.value)}
-                                                placeholder="Escribe tu respuesta..."
-                                                className="flex-1 px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-yellow-500 transition-colors"
-                                            />
-                                            <button
-                                                onClick={() => handleSubmitReply(comment._id)}
-                                                disabled={!replyContent.trim()}
-                                                className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black font-bold py-2 px-4 rounded-lg transition-all duration-300 disabled:opacity-50"
-                                            >
-                                                <Send size={16} />
-                                            </button>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Respuestas */}
-                                {comment.respuestas && comment.respuestas.length > 0 && (
-                                    <div className="mt-4 ml-4 border-l-2 border-gray-700 pl-4 space-y-4">
-                                        {comment.respuestas.map((reply) => (
-                                            <div key={reply._id} className="bg-gray-800/20 rounded-lg p-4">
-                                                <div className="flex items-center gap-2 mb-2">
-                                                    <div className="w-6 h-6 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-full flex items-center justify-center">
-                                                        <User size={12} className="text-white" />
-                                                    </div>
-                                                    <h5 className="font-medium text-white text-sm">{reply.usuario.nombre}</h5>
-                                                    <span className="text-xs text-gray-400">{formatDate(reply.fechaCreacion)}</span>
-                                                </div>
-                                                <p className="text-gray-300 text-sm">{reply.contenido}</p>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
+                    <div className="space-y-4">
+                        {comments.map((comentario) => (
+                            <div key={comentario._id} className="bg-gray-800/30 backdrop-blur-sm rounded-xl p-6 border border-gray-700">
+                                <h3 className="font-semibold text-yellow-400">
+                                    {comentario.usuario?.nombre || comentario.nombreAnonimo || 'Anónimo'}
+                                </h3>
+                                <p className="text-gray-300">{comentario.contenido}</p>
+                                <div className="text-sm text-gray-500">Calificación: {comentario.calificacion || 'N/A'}</div>
                             </div>
                         ))}
                     </div>

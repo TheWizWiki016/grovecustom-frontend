@@ -29,23 +29,18 @@ export default function ProfilePage() {
     const [profileData, setProfileData] = useState({
         nombre: session?.user?.nombre || "",
         email: session?.user?.email || "",
-
-
-        // telefono: session?.user?.telefono || "",
-        // direccion: session?.user?.direccion || "",
-        // ciudad: session?.user?.ciudad || "",
-        // codigoPostal: session?.user?.codigoPostal || "",
-        // fechaNacimiento: session?.user?.fechaNacimiento || "",
-        // profesion: session?.user?.profesion || "",
-        // intereses: session?.user?.intereses || "",
-        // marcaFavorita: session?.user?.marcaFavorita || "",
-
-
+        telefono: session?.user?.telefono || "",
+        direccion: session?.user?.direccion || "",
+        ciudad: session?.user?.ciudad || "",
+        codigoPostal: session?.user?.codigoPostal || "",
+        fechaNacimiento: session?.user?.fechaNacimiento || "",
+        profesion: session?.user?.profesion || "",
+        intereses: session?.user?.intereses || "",
+        marcaFavorita: session?.user?.marcaFavorita || "",
     });
 
     const [loading, setLoading] = useState(false);
     const [mensaje, setMensaje] = useState<string | null>(null);
-    const [activeTab, setActiveTab] = useState('personal');
 
     if (status === "loading") {
         return (
@@ -65,7 +60,7 @@ export default function ProfilePage() {
                     <Shield className="w-16 h-16 text-yellow-400 mx-auto mb-4" />
                     <h2 className="text-2xl font-bold text-white mb-2">Acceso Requerido</h2>
                     <p className="text-gray-400 mb-6">Necesitas iniciar sesión para acceder a tu perfil</p>
-                    <Link href="/auth/signin" className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-bold py-3 px-6 rounded-lg hover:from-yellow-500 hover:to-yellow-700 transition-all">
+                    <Link href="/api/auth/signin" className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-bold py-3 px-6 rounded-lg hover:from-yellow-500 hover:to-yellow-700 transition-all">
                         Iniciar Sesión
                     </Link>
                 </div>
@@ -119,12 +114,6 @@ export default function ProfilePage() {
             setLoading(false);
         }
     };
-
-    const tabs = [
-        { id: 'personal', label: 'Información Personal', icon: User },
-        { id: 'contacto', label: 'Contacto', icon: Mail },
-        { id: 'preferencias', label: 'Preferencias', icon: Heart },
-    ];
 
     const marcasFavoritas = [
         'Ferrari', 'Lamborghini', 'Porsche', 'McLaren', 'Aston Martin',
@@ -200,180 +189,153 @@ export default function ProfilePage() {
                     </div>
                 )}
 
-                {/* Tabs */}
-                <div className="mb-8">
-                    <div className="flex flex-wrap gap-2">
-                        {tabs.map((tab) => {
-                            const IconComponent = tab.icon;
-                            return (
-                                <button
-                                    key={tab.id}
-                                    onClick={() => setActiveTab(tab.id)}
-                                    className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all ${activeTab === tab.id
-                                        ? 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-black'
-                                        : 'bg-gray-800/50 text-gray-300 hover:bg-gray-700/50 hover:text-white'
-                                        }`}
-                                >
-                                    <IconComponent className="w-4 h-4" />
-                                    {tab.label}
-                                </button>
-                            );
-                        })}
-                    </div>
-                </div>
-
-                {/* Form */}
+                {/* Unified Form */}
                 <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-2xl p-8">
-                    <form onSubmit={handleSubmit} className="space-y-8">
-                        {/* Personal Information Tab */}
-                        {activeTab === 'personal' && (
-                            <div className="space-y-6">
-                                <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
-                                    <User className="w-6 h-6 text-yellow-400" />
-                                    Información Personal
-                                </h3>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div>
-                                        <label className="block text-white font-semibold mb-2">Nombre Completo</label>
-                                        <input
-                                            type="text"
-                                            name="nombre"
-                                            value={profileData.nombre}
-                                            onChange={handleInputChange}
-                                            required
-                                            className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
-                                            placeholder="Tu nombre completo"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-white font-semibold mb-2">Fecha de Nacimiento</label>
-                                        <input
-                                            type="date"
-                                            name="fechaNacimiento"
-                                            //value={profileData.fechaNacimiento}
-                                            onChange={handleInputChange}
-                                            className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
-                                        />
-                                    </div>
-                                    <div className="md:col-span-2">
-                                        <label className="block text-white font-semibold mb-2">Profesión</label>
-                                        <input
-                                            type="text"
-                                            name="profesion"
-                                            //value={profileData.profesion}
-                                            onChange={handleInputChange}
-                                            className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
-                                            placeholder="¿A qué te dedicas?"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        )}
+                    <form onSubmit={handleSubmit} className="space-y-12">
 
-                        {/* Contact Information Tab */}
-                        {activeTab === 'contacto' && (
-                            <div className="space-y-6">
-                                <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
-                                    <Mail className="w-6 h-6 text-yellow-400" />
-                                    Información de Contacto
-                                </h3>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div>
-                                        <label className="block text-white font-semibold mb-2">Email</label>
-                                        <input
-                                            type="email"
-                                            name="email"
-                                            value={profileData.email}
-                                            onChange={handleInputChange}
-                                            required
-                                            className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
-                                            placeholder="tu@email.com"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-white font-semibold mb-2">Teléfono</label>
-                                        <input
-                                            type="tel"
-                                            name="telefono"
-                                            //value={profileData.telefono}
-                                            onChange={handleInputChange}
-                                            className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
-                                            placeholder="+1 (555) 123-4567"
-                                        />
-                                    </div>
-                                    <div className="md:col-span-2">
-                                        <label className="block text-white font-semibold mb-2">Dirección</label>
-                                        <input
-                                            type="text"
-                                            name="direccion"
-                                            //value={profileData.direccion}
-                                            onChange={handleInputChange}
-                                            className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
-                                            placeholder="123 Luxury Avenue"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-white font-semibold mb-2">Ciudad</label>
-                                        <input
-                                            type="text"
-                                            name="ciudad"
-                                            //value={profileData.ciudad}
-                                            onChange={handleInputChange}
-                                            className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
-                                            placeholder="Beverly Hills"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-white font-semibold mb-2">Código Postal</label>
-                                        <input
-                                            type="text"
-                                            name="codigoPostal"
-                                            //value={profileData.codigoPostal}
-                                            onChange={handleInputChange}
-                                            className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
-                                            placeholder="90210"
-                                        />
-                                    </div>
+                        {/* Personal Information Section */}
+                        <div className="space-y-6">
+                            <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+                                <User className="w-6 h-6 text-yellow-400" />
+                                Información Personal
+                            </h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label className="block text-white font-semibold mb-2">Nombre Completo</label>
+                                    <input
+                                        type="text"
+                                        name="nombre"
+                                        value={profileData.nombre}
+                                        onChange={handleInputChange}
+                                        required
+                                        className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
+                                        placeholder="Tu nombre completo"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-white font-semibold mb-2">Fecha de Nacimiento</label>
+                                    <input
+                                        type="date"
+                                        name="fechaNacimiento"
+                                        value={profileData.fechaNacimiento}
+                                        onChange={handleInputChange}
+                                        className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
+                                    />
+                                </div>
+                                <div className="md:col-span-2">
+                                    <label className="block text-white font-semibold mb-2">Profesión</label>
+                                    <input
+                                        type="text"
+                                        name="profesion"
+                                        value={profileData.profesion}
+                                        onChange={handleInputChange}
+                                        className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
+                                        placeholder="¿A qué te dedicas?"
+                                    />
                                 </div>
                             </div>
-                        )}
+                        </div>
 
-                        {/* Preferences Tab */}
-                        {activeTab === 'preferencias' && (
-                            <div className="space-y-6">
-                                <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
-                                    <Heart className="w-6 h-6 text-yellow-400" />
-                                    Preferencias Automotrices
-                                </h3>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div>
-                                        <label className="block text-white font-semibold mb-2">Marca Favorita</label>
-                                        <select
-                                            name="marcaFavorita"
-                                            //value={profileData.marcaFavorita}
-                                            onChange={handleInputChange}
-                                            className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-3 text-white focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
-                                        >
-                                            <option value="">Selecciona una marca</option>
-                                            {marcasFavoritas.map((marca) => (
-                                                <option key={marca} value={marca}>{marca}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                    <div className="md:col-span-2">
-                                        <label className="block text-white font-semibold mb-2">Intereses Automotrices</label>
-                                        <textarea
-                                            name="intereses"
-                                            //value={profileData.intereses}
-                                            onChange={handleInputChange}
-                                            rows={4}
-                                            className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all resize-none"
-                                            placeholder="Cuéntanos sobre tus gustos automotrices, tipos de vehículos preferidos, características que más valoras, etc."
-                                        />
-                                    </div>
+                        {/* Contact Information Section */}
+                        <div className="space-y-6">
+                            <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+                                <Mail className="w-6 h-6 text-yellow-400" />
+                                Información de Contacto
+                            </h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label className="block text-white font-semibold mb-2">Email</label>
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        value={profileData.email}
+                                        onChange={handleInputChange}
+                                        required
+                                        className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
+                                        placeholder="tu@email.com"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-white font-semibold mb-2">Teléfono</label>
+                                    <input
+                                        type="tel"
+                                        name="telefono"
+                                        value={profileData.telefono}
+                                        onChange={handleInputChange}
+                                        className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
+                                        placeholder="+1 (555) 123-4567"
+                                    />
+                                </div>
+                                <div className="md:col-span-2">
+                                    <label className="block text-white font-semibold mb-2">Dirección</label>
+                                    <input
+                                        type="text"
+                                        name="direccion"
+                                        value={profileData.direccion}
+                                        onChange={handleInputChange}
+                                        className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
+                                        placeholder="123 Luxury Avenue"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-white font-semibold mb-2">Ciudad</label>
+                                    <input
+                                        type="text"
+                                        name="ciudad"
+                                        value={profileData.ciudad}
+                                        onChange={handleInputChange}
+                                        className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
+                                        placeholder="Beverly Hills"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-white font-semibold mb-2">Código Postal</label>
+                                    <input
+                                        type="text"
+                                        name="codigoPostal"
+                                        value={profileData.codigoPostal}
+                                        onChange={handleInputChange}
+                                        className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
+                                        placeholder="90210"
+                                    />
                                 </div>
                             </div>
-                        )}
+                        </div>
+
+                        {/* Preferences Section */}
+                        <div className="space-y-6">
+                            <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+                                <Heart className="w-6 h-6 text-yellow-400" />
+                                Preferencias Automotrices
+                            </h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label className="block text-white font-semibold mb-2">Marca Favorita</label>
+                                    <select
+                                        name="marcaFavorita"
+                                        value={profileData.marcaFavorita}
+                                        onChange={handleInputChange}
+                                        className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-3 text-white focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
+                                    >
+                                        <option value="">Selecciona una marca</option>
+                                        {marcasFavoritas.map((marca) => (
+                                            <option key={marca} value={marca}>{marca}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="md:col-span-2">
+                                    <label className="block text-white font-semibold mb-2">Intereses Automotrices</label>
+                                    <textarea
+                                        name="intereses"
+                                        value={profileData.intereses}
+                                        onChange={handleInputChange}
+                                        rows={4}
+                                        className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all resize-none"
+                                        placeholder="Cuéntanos sobre tus gustos automotrices, tipos de vehículos preferidos, características que más valoras, etc."
+                                    />
+                                </div>
+                            </div>
+                        </div>
 
                         {/* Action Buttons */}
                         <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-700">

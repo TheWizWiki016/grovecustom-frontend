@@ -171,11 +171,11 @@ export default function RegisterPage() {
                                 />
                                 <label htmlFor="terms" className="text-sm text-gray-400">
                                     Acepto los{" "}
-                                    <Link href="/terminos" className="text-yellow-400 hover:text-yellow-300 transition-colors">
+                                    <Link href="/pagina_construccion" className="text-yellow-400 hover:text-yellow-300 transition-colors">
                                         términos y condiciones
                                     </Link>{" "}
                                     y la{" "}
-                                    <Link href="/privacidad" className="text-yellow-400 hover:text-yellow-300 transition-colors">
+                                    <Link href="/pagina_construccion" className="text-yellow-400 hover:text-yellow-300 transition-colors">
                                         política de privacidad
                                     </Link>
                                 </label>

@@ -5,6 +5,9 @@ import { useState, useEffect } from 'react'
 import { Car, Crown, Star, Award, Shield, Users, Clock, Phone, Mail, MapPin, Send, CheckCircle, Zap } from 'lucide-react'
 import Link from 'next/link'
 import Footer from '@/components/Footer'
+import MapaLeaflet from '@/components/MapaLeaflet'
+
+
 
 
 export default function AboutContactPage() {
@@ -61,21 +64,21 @@ export default function AboutContactPage() {
 
     const teamMembers = [
         {
-            name: "Alexander Grove",
+            name: "Edgar Trejo",
             position: "CEO & Fundador",
-            image: "/api/placeholder/300/400",
-            description: "Con más de 25 años en la industria automotriz de lujo, Alexander es un visionario que transformó Grove Custom Cars en la referencia mundial de vehículos exclusivos."
+            image: "img/yomero.jpeg",
+            description: "Con más de 25 años en la industria automotriz de lujo."
         },
         {
-            name: "Isabella Rodriguez",
-            position: "Directora de Ventas",
-            image: "/api/placeholder/300/400",
-            description: "Especialista en relaciones con clientes de alto perfil, Isabella garantiza que cada experiencia de compra sea única y memorable."
+            name: "Josue Parga",
+            position: "Director de programación",
+            image: "img/josue.jpeg",
+            description: "Experto en desarrollo de software automotriz y personalización digital."
         },
         {
-            name: "Marcus Thompson",
+            name: "Juan Luis Lagunas Rosales",
             position: "Jefe de Ingeniería",
-            image: "/api/placeholder/300/400",
+            image: "img/juan.jpg",
             description: "Ingeniero automotriz con experiencia en Ferrari y McLaren, Marcus supervisa todas las modificaciones y personalizaciones."
         }
     ]
@@ -87,7 +90,7 @@ export default function AboutContactPage() {
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,215,0,0.1),transparent)]"></div>
                 <div className={`max-w-7xl mx-auto text-center transform transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
                     <h1 className="text-6xl md:text-8xl font-bold bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent mb-6">
-                        GROVE CUSTOM CARS
+                        GROVE CUSTOM
                     </h1>
                     <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto">
                         Donde la pasión por los automóviles de lujo se encuentra con la excelencia y la exclusividad
@@ -104,12 +107,12 @@ export default function AboutContactPage() {
                                 Nuestra Historia
                             </h2>
                             <p className="text-lg text-gray-300 mb-6 leading-relaxed">
-                                Desde 1999, Grove Custom Cars ha sido sinónimo de excelencia en el mundo de los automóviles de lujo.
-                                Fundada por Alexander Grove, un apasionado coleccionista e ingeniero automotriz, nuestra empresa nació
+                                Desde 2020, Grove Custom Cars ha sido sinónimo de excelencia en el mundo de los automóviles de lujo.
+                                Fundada por Edgar Trejo, un apasionado coleccionista e ingeniero automotriz, nuestra empresa nació
                                 del deseo de ofrecer vehículos únicos que combinan el rendimiento excepcional con el diseño más sofisticado.
                             </p>
                             <p className="text-lg text-gray-300 mb-8 leading-relaxed">
-                                Ubicados en el corazón de Los Angeles, California, nos especializamos en la venta, personalización
+                                Ubicados en el corazón de Zacatecas, Mexico nos especializamos en la venta, personalización
                                 y mantenimiento de las marcas más prestigiosas del mundo: Ferrari, Lamborghini, Porsche, McLaren,
                                 Aston Martin y muchas más.
                             </p>
@@ -132,7 +135,7 @@ export default function AboutContactPage() {
                         <div className={`transform transition-all duration-1000 delay-500 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>
                             <div className="relative">
                                 <img
-                                    src="/api/placeholder/600/500"
+                                    src="/img/showroom.jpg"
                                     alt="Grove Custom Cars Showroom"
                                     className="rounded-lg shadow-2xl"
                                 />
@@ -248,115 +251,9 @@ export default function AboutContactPage() {
                             </div>
 
                             {/* Map */}
-                            <div className="relative h-80 rounded-lg overflow-hidden shadow-2xl">
-                                <div className="absolute inset-0 bg-gray-700 flex items-center justify-center">
-                                    <div className="text-center">
-                                        <MapPin className="w-16 h-16 text-yellow-400 mx-auto mb-4" />
-                                        <p className="text-white text-lg font-semibold">Grove Custom Cars</p>
-                                        <p className="text-gray-400">Beverly Hills, California</p>
-                                    </div>
-                                </div>
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
-                            </div>
+                            <MapaLeaflet />
                         </div>
 
-                        {/* Contact Form */}
-                        <div>
-                            <h3 className="text-3xl font-bold text-white mb-8">Envíanos un Mensaje</h3>
-                            <form className="space-y-6" onSubmit={handleSubmit}>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div>
-                                        <label className="block text-white font-semibold mb-2">Nombre *</label>
-                                        <input
-                                            type="text"
-                                            name="name"
-                                            value={formData.name}
-                                            onChange={handleInputChange}
-                                            required
-                                            className="w-full bg-gray-800/50 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
-                                            placeholder="Tu nombre completo"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-white font-semibold mb-2">Email *</label>
-                                        <input
-                                            type="email"
-                                            name="email"
-                                            value={formData.email}
-                                            onChange={handleInputChange}
-                                            required
-                                            className="w-full bg-gray-800/50 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
-                                            placeholder="tu@email.com"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div>
-                                        <label className="block text-white font-semibold mb-2">Teléfono</label>
-                                        <input
-                                            type="tel"
-                                            name="phone"
-                                            value={formData.phone}
-                                            onChange={handleInputChange}
-                                            className="w-full bg-gray-800/50 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
-                                            placeholder="+1 (555) 123-4567"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-white font-semibold mb-2">Asunto *</label>
-                                        <select
-                                            name="subject"
-                                            value={formData.subject}
-                                            onChange={handleInputChange}
-                                            required
-                                            className="w-full bg-gray-800/50 border border-gray-600 rounded-lg px-4 py-3 text-white focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
-                                        >
-                                            <option value="">Selecciona un asunto</option>
-                                            <option value="compra">Consulta de Compra</option>
-                                            <option value="venta">Quiero Vender mi Vehículo</option>
-                                            <option value="servicio">Servicio y Mantenimiento</option>
-                                            <option value="personalizacion">Personalización</option>
-                                            <option value="otros">Otros</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label className="block text-white font-semibold mb-2">Mensaje *</label>
-                                    <textarea
-                                        name="message"
-                                        value={formData.message}
-                                        onChange={handleInputChange}
-                                        required
-                                        rows={6}
-                                        className="w-full bg-gray-800/50 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all resize-none"
-                                        placeholder="Cuéntanos sobre tus necesidades y cómo podemos ayudarte..."
-                                    />
-                                </div>
-
-                                <button
-                                    type="submit"
-                                    disabled={isSubmitted}
-                                    className={`w-full py-4 px-6 rounded-lg font-bold text-black transition-all duration-300 transform hover:scale-105 ${isSubmitted
-                                        ? 'bg-green-500 hover:bg-green-600'
-                                        : 'bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700'
-                                        }`}
-                                >
-                                    {isSubmitted ? (
-                                        <span className="flex items-center justify-center gap-2">
-                                            <CheckCircle className="w-5 h-5" />
-                                            ¡Mensaje Enviado!
-                                        </span>
-                                    ) : (
-                                        <span className="flex items-center justify-center gap-2">
-                                            <Send className="w-5 h-5" />
-                                            Enviar Mensaje
-                                        </span>
-                                    )}
-                                </button>
-                            </form>
-                        </div>
                     </div>
                 </div>
             </section>

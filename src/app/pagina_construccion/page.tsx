@@ -136,7 +136,7 @@ export default function UnderConstructionPage() {
                             </div>
                             <div className="w-full bg-gray-700 rounded-full h-3 overflow-hidden">
                                 <div className="bg-gradient-to-r from-yellow-500 to-yellow-600 h-3 rounded-full transition-all duration-1000 ease-out animate-pulse"
-                                    style={{ width: '%' }}></div>
+                                    style={{ width: '60%' }}></div>
                             </div>
                         </div>
                     </div>
