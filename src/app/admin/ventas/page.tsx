@@ -60,11 +60,13 @@ export default function VentasPage() {
         {} as Record<string, { auto: any; ventas: number; ganancia: number }>,
     )
 
-    const dataGrafica = Object.values(resumen).map(({ auto, ventas, ganancia }) => ({
-        nombre: `${auto.marca} ${auto.modelo}`,
-        ventas,
-        ganancia,
-    }))
+    const dataGrafica = (Object.values(resumen) as { auto: any; ventas: number; ganancia: number }[]).map(
+        ({ auto, ventas, ganancia }) => ({
+            nombre: `${auto.marca} ${auto.modelo}`,
+            ventas,
+            ganancia,
+        }),
+    )
 
     const exportarPDF = async () => {
         const pdf = new jsPDF("p", "mm", "a4")
