@@ -2,35 +2,25 @@
 
 import dynamic from 'next/dynamic'
 import 'leaflet/dist/leaflet.css'
+import { Marker, Popup, TileLayer } from 'react-leaflet'
+import type { LatLngExpression } from 'leaflet'
 
-// Importa los tipos correctos
-import { MapContainer as MapContainerBase, TileLayer as TileLayerBase, Marker as MarkerBase, Popup as PopupBase } from 'react-leaflet'
-
-const MapContainer = dynamic(async () => (await import('react-leaflet')).MapContainer, {
+const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), {
     ssr: false,
-}) as typeof MapContainerBase
+})
 
-const TileLayer = dynamic(async () => (await import('react-leaflet')).TileLayer, {
-    ssr: false,
-}) as typeof TileLayerBase
+const position: LatLngExpression = [22.7589614, -102.5592065]
 
-const Marker = dynamic(async () => (await import('react-leaflet')).Marker, {
-    ssr: false,
-}) as typeof MarkerBase
-
-const Popup = dynamic(async () => (await import('react-leaflet')).Popup, {
-    ssr: false,
-}) as typeof PopupBase
-
-const position: [number, number] = [22.7589614, -102.5592065]
-
-export default function MapaLeaflet() {
+export default function MapaMapTiler() {
     return (
         <div className="rounded-xl overflow-hidden shadow-2xl mt-12">
-            <MapContainer center={position} zoom={13} style={{ height: '320px', width: '100%' }}>
+            <MapContainer
+                style={{ height: '320px', width: '100%' }}
+                zoom={13}
+                center={position}
+            >
                 <TileLayer
-                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a>'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    url={`https://api.maptiler.com/maps/streets-v2/256/{z}/{x}/{y}.png?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY}`}
                 />
                 <Marker position={position}>
                     <Popup>
