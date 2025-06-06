@@ -80,6 +80,7 @@ interface Comment {
     fechaActualizacion?: string
     respuestas?: Comment[]
     parentId?: string
+    nombreAnonimo?: string
 }
 
 interface LoginModalProps {
@@ -278,9 +279,10 @@ export default function DetalleAutoPage() {
         if (session?.user) {
             const userFromSession = {
                 ...session.user,
-                _id: session.user._id || session.user.id // Normaliza el campo
+                _id: session.user._id || (session.user as any).id, // Normaliza el campo
+                nombre: session.user.nombre ?? session.user.name ?? '', // Asegura string
             };
-            setUser(userFromSession);
+            setUser(userFromSession as User);
             return;
         }
 
