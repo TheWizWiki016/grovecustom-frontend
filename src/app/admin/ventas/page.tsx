@@ -167,42 +167,42 @@ export default function VentasPage() {
         pdf.setTextColor(0, 0, 0)
         pdf.setFont("helvetica", "normal")
 
-        // Datos de la tabla
-        Object.values(resumen).forEach((item, index) => {
-            // Alternar colores de fila
-            if (index % 2 === 0) {
-                pdf.setFillColor(248, 250, 252)
-                pdf.rect(20, yPosition - 3, pageWidth - 40, 8, "F")
-            }
-
-            xPosition = 20
-            const rowData = [
-                `${item.auto.marca} ${item.auto.modelo}`,
-                item.auto.año?.toString() || "N/A",
-                `$${item.auto.precio?.toLocaleString() || "0"}`,
-                item.ventas.toString(),
-                `$${item.ganancia.toLocaleString()}`,
-            ]
-
-            rowData.forEach((data, colIndex) => {
-                // Truncar texto si es muy largo
-                let displayText = data
-                if (colIndex === 0 && data.length > 20) {
-                    displayText = data.substring(0, 17) + "..."
+            // Datos de la tabla
+            (Object.values(resumen) as { auto: any; ventas: number; ganancia: number }[]).forEach((item, index) => {
+                // Alternar colores de fila
+                if (index % 2 === 0) {
+                    pdf.setFillColor(248, 250, 252)
+                    pdf.rect(20, yPosition - 3, pageWidth - 40, 8, "F")
                 }
 
-                pdf.text(displayText, xPosition + 2, yPosition + 2)
-                xPosition += columnWidths[colIndex]
+                xPosition = 20
+                const rowData = [
+                    `${item.auto.marca} ${item.auto.modelo}`,
+                    item.auto.año?.toString() || "N/A",
+                    `$${item.auto.precio?.toLocaleString() || "0"}`,
+                    item.ventas.toString(),
+                    `$${item.ganancia.toLocaleString()}`,
+                ]
+
+                rowData.forEach((data, colIndex) => {
+                    // Truncar texto si es muy largo
+                    let displayText = data
+                    if (colIndex === 0 && data.length > 20) {
+                        displayText = data.substring(0, 17) + "..."
+                    }
+
+                    pdf.text(displayText, xPosition + 2, yPosition + 2)
+                    xPosition += columnWidths[colIndex]
+                })
+
+                yPosition += 8
+
+                // Nueva página si es necesario
+                if (yPosition > pageHeight - 30) {
+                    pdf.addPage()
+                    yPosition = 30
+                }
             })
-
-            yPosition += 8
-
-            // Nueva página si es necesario
-            if (yPosition > pageHeight - 30) {
-                pdf.addPage()
-                yPosition = 30
-            }
-        })
 
         // Pie de página
         const addFooter = () => {
