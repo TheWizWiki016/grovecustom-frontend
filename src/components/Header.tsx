@@ -32,13 +32,7 @@ export default function ImprovedHeader() {
     const [userRole, setUserRole] = useState<string>("user")
 
     useEffect(() => {
-        console.log("📊 Sesión completa:", session) // Para debug
-        console.log("👤 Usuario email:", session?.user?.email) // Para debug
-        console.log("🎭 Rol del usuario:", session?.user?.rol) // Para debug
-
-        // ⭐ VERIFICACIÓN ESPECIAL: Si es admin@admin.com, forzar admin
         if (session?.user?.email === "admin@admin.com") {
-            console.log("🔥 Usuario especial detectado en header: admin@admin.com - Forzando rol admin")
             setUserRole("admin")
             Cookies.set("userRole", "admin", { expires: 7 })
             return
@@ -46,17 +40,13 @@ export default function ImprovedHeader() {
 
         // Obtener el rol desde la sesión normalmente
         if (session?.user?.rol) {
-            console.log("✅ Estableciendo rol desde sesión:", session.user.rol)
             setUserRole(session.user.rol)
-            Cookies.set("userRole", session.user.rol, { expires: 7 })
         } else {
             // Fallback a cookie si no hay sesión
             const rolCookie = Cookies.get("userRole")
             if (rolCookie) {
-                console.log("🍪 Estableciendo rol desde cookie:", rolCookie)
                 setUserRole(rolCookie)
             } else {
-                console.log("⚠️ No hay rol, usando 'user' por defecto")
                 setUserRole("user")
             }
         }
@@ -93,7 +83,19 @@ export default function ImprovedHeader() {
             href: "/admin/ventas",
             icon: DollarSign,
             description: "Gestionar las ventas ",
-        }
+        },
+        {
+            name: "Mis Citas",
+            href: "/mis-citas",
+            icon: Calendar,
+            description: "Ver mis citas programadas",
+        },
+        {
+            name: "Mis Ordenes",
+            href: "/mis-ordenes",
+            icon: Calendar,
+            description: "Ver mis ordenes ",
+        },
     ]
 
     // Opciones específicas para usuarios regulares
@@ -134,13 +136,11 @@ export default function ImprovedHeader() {
 
     // Función para obtener las opciones de menú según el rol
     const getMenuItems = () => {
-        console.log("🎯 Obteniendo menú para rol:", userRole) // Para debug
         return userRole === "admin" ? adminMenuItems : userMenuItems
     }
 
     // Función para obtener el color del badge según el rol
     const getRoleBadge = () => {
-        // ⭐ Verificación especial para admin@admin.com
         const isSpecialUser = session?.user?.email === "admin@admin.com"
 
         if (userRole === "admin") {
@@ -161,7 +161,6 @@ export default function ImprovedHeader() {
 
     // Obtener el nombre del usuario
     const getUserDisplayName = () => {
-        // ⭐ Nombre especial para admin@admin.com
         if (session?.user?.email === "admin@admin.com") {
             return "Edgar (Super Admin)"
         }

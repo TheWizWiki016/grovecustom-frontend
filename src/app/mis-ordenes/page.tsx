@@ -31,10 +31,13 @@ export default function MisComprasPage() {
             fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/ventas/usuario/${session.user._id}`)
                 .then(res => res.json())
                 .then(data => {
+                    console.log('Ventas recibidas:', data); // <-- Agrega este log
                     setVentas(data)
                     setLoading(false)
                 })
                 .catch(() => setLoading(false))
+        } else {
+            setLoading(false)
         }
     }, [session])
 

@@ -373,18 +373,25 @@ export default function AgendarCitaPage() {
                 },
                 body: JSON.stringify({
                     autoId: auto ? auto._id : '',
-                    usuarioId: user._id,
+                    usuarioId: user?._id,
                     fechaCita: appointmentData.fechaCita,
                     horaCita: appointmentData.horaCita,
                     tipoServicio: appointmentData.tipoServicio,
                     ubicacion: appointmentData.ubicacion,
-                    direccion: appointmentData.direccion,
                     telefono: appointmentData.telefono,
-                    email: appointmentData.email,
-                    comentarios: appointmentData.comentarios,
-                    esDomicilio: appointmentData.esDomicilio,
-                    concesionarioIndex: appointmentData.concesionarioIndex,
+                    email: appointmentData.email
                 }),
+            });
+
+            console.log({
+                autoId: auto ? auto._id : '',
+                usuarioId: user?._id,
+                fechaCita: appointmentData.fechaCita,
+                horaCita: appointmentData.horaCita,
+                tipoServicio: appointmentData.tipoServicio,
+                ubicacion: appointmentData.ubicacion,
+                telefono: appointmentData.telefono,
+                email: appointmentData.email
             });
 
             if (!response.ok) throw new Error('No se pudo guardar la cita');

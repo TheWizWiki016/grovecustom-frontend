@@ -32,16 +32,12 @@ const handler = NextAuth({
     callbacks: {
         async jwt({ token, user }) {
             if (user) {
-                token.id = user.id;
-                token.email = user.email;
-                token.nombre = user.nombre;
+                token._id = user._id; // o el campo correcto de tu base
             }
             return token;
         },
         async session({ session, token }) {
-            session.user.id = token.id;
-            session.user.email = token.email;
-            session.user.nombre = token.nombre;
+            session.user._id = token._id; // o el campo correcto
             return session;
         },
     },

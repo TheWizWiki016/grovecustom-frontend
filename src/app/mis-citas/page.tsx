@@ -80,8 +80,10 @@ export default function MisCitasPage() {
     ];
 
     useEffect(() => {
-        if (session?.user?._id) {
-            fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/citas/usuario/${session.user._id}`)
+        const userId: string | undefined = (session?.user as { _id?: string; id?: string })?._id || (session?.user as { _id?: string; id?: string })?.id;
+        console.log('userId usado para fetch:', userId); // <-- Agrega esto
+        if (userId) {
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/citas/usuario/${userId}`)
                 .then(res => res.json())
                 .then(data => {
                     setCitas(data);
@@ -91,6 +93,8 @@ export default function MisCitasPage() {
                     console.error('Error al cargar citas:', error);
                     setLoading(false);
                 });
+        } else {
+            setLoading(false);
         }
     }, [session]);
 

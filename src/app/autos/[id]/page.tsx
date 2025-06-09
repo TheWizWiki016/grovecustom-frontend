@@ -837,6 +837,83 @@ export default function DetalleAutoPage() {
 
                 </div>
 
+                {/* Especificaciones técnicas mejoradas */}
+                <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-2xl p-8 shadow-2xl border border-gray-700 animate-fade-in-up">
+                    <h2 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+                        <Settings size={32} className="text-yellow-500" />
+                        Especificaciones Técnicas
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {auto.potencia && (
+                            <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700 hover:border-yellow-500 transition-all duration-300 hover:shadow-lg">
+                                <div className="flex items-center gap-3 mb-3">
+                                    <div className="p-2 bg-gradient-to-r from-red-500 to-red-600 rounded-lg">
+                                        <Gauge size={24} className="text-white" />
+                                    </div>
+                                    <h3 className="text-lg font-semibold text-white">Potencia</h3>
+                                </div>
+                                <p className="text-2xl font-bold text-yellow-400">{auto.potencia}</p>
+                            </div>
+                        )}
+                        {auto.caballosFuerza && (
+                            <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700 hover:border-yellow-500 transition-all duration-300 hover:shadow-lg">
+                                <div className="flex items-center gap-3 mb-3">
+                                    <div className="p-2 bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg">
+                                        <Car size={24} className="text-white" />
+                                    </div>
+                                    <h3 className="text-lg font-semibold text-white">Caballos de Fuerza</h3>
+                                </div>
+                                <p className="text-2xl font-bold text-yellow-400">{auto.caballosFuerza} HP</p>
+                            </div>
+                        )}
+                        {auto.cilindrada && (
+                            <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700 hover:border-yellow-500 transition-all duration-300 hover:shadow-lg">
+                                <div className="flex items-center gap-3 mb-3">
+                                    <div className="p-2 bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg">
+                                        <Settings size={24} className="text-white" />
+                                    </div>
+                                    <h3 className="text-lg font-semibold text-white">Cilindrada</h3>
+                                </div>
+                                <p className="text-2xl font-bold text-yellow-400">{auto.cilindrada}</p>
+                            </div>
+                        )}
+                        {auto.tamanoMotor && (
+                            <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700 hover:border-yellow-500 transition-all duration-300 hover:shadow-lg">
+                                <div className="flex items-center gap-3 mb-3">
+                                    <div className="p-2 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg">
+                                        <Settings size={24} className="text-white" />
+                                    </div>
+                                    <h3 className="text-lg font-semibold text-white">Tamaño del Motor</h3>
+                                </div>
+                                <p className="text-2xl font-bold text-yellow-400">{auto.tamanoMotor}</p>
+                            </div>
+                        )}
+                        {auto.transmision && (
+                            <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700 hover:border-yellow-500 transition-all duration-300 hover:shadow-lg">
+                                <div className="flex items-center gap-3 mb-3">
+                                    <div className="p-2 bg-gradient-to-r from-teal-500 to-teal-600 rounded-lg">
+                                        <Settings size={24} className="text-white" />
+                                    </div>
+                                    <h3 className="text-lg font-semibold text-white">Transmisión</h3>
+                                </div>
+                                <p className="text-2xl font-bold text-yellow-400">{auto.transmision}</p>
+                            </div>
+                        )}
+                        {auto.tipoCombustible && (
+                            <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700 hover:border-yellow-500 transition-all duration-300 hover:shadow-lg">
+                                <div className="flex items-center gap-3 mb-3">
+                                    <div className="p-2 bg-gradient-to-r from-green-500 to-green-600 rounded-lg">
+                                        <Fuel size={24} className="text-white" />
+                                    </div>
+                                    <h3 className="text-lg font-semibold text-white">Combustible</h3>
+                                </div>
+                                <p className="text-2xl font-bold text-yellow-400">{auto.tipoCombustible}</p>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+
                 {/* Sección de imágenes mejorada */}
                 {auto.imagenes && auto.imagenes.length > 0 && (
                     <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-2xl p-8 shadow-2xl border border-gray-700 animate-fade-in-up">
@@ -962,81 +1039,6 @@ export default function DetalleAutoPage() {
                     </div>
                 )}
 
-                {/* Especificaciones técnicas mejoradas */}
-                <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-2xl p-8 shadow-2xl border border-gray-700 animate-fade-in-up">
-                    <h2 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
-                        <Settings size={32} className="text-yellow-500" />
-                        Especificaciones Técnicas
-                    </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {auto.potencia && (
-                            <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700 hover:border-yellow-500 transition-all duration-300 hover:shadow-lg">
-                                <div className="flex items-center gap-3 mb-3">
-                                    <div className="p-2 bg-gradient-to-r from-red-500 to-red-600 rounded-lg">
-                                        <Gauge size={24} className="text-white" />
-                                    </div>
-                                    <h3 className="text-lg font-semibold text-white">Potencia</h3>
-                                </div>
-                                <p className="text-2xl font-bold text-yellow-400">{auto.potencia}</p>
-                            </div>
-                        )}
-                        {auto.caballosFuerza && (
-                            <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700 hover:border-yellow-500 transition-all duration-300 hover:shadow-lg">
-                                <div className="flex items-center gap-3 mb-3">
-                                    <div className="p-2 bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg">
-                                        <Car size={24} className="text-white" />
-                                    </div>
-                                    <h3 className="text-lg font-semibold text-white">Caballos de Fuerza</h3>
-                                </div>
-                                <p className="text-2xl font-bold text-yellow-400">{auto.caballosFuerza} HP</p>
-                            </div>
-                        )}
-                        {auto.cilindrada && (
-                            <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700 hover:border-yellow-500 transition-all duration-300 hover:shadow-lg">
-                                <div className="flex items-center gap-3 mb-3">
-                                    <div className="p-2 bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg">
-                                        <Settings size={24} className="text-white" />
-                                    </div>
-                                    <h3 className="text-lg font-semibold text-white">Cilindrada</h3>
-                                </div>
-                                <p className="text-2xl font-bold text-yellow-400">{auto.cilindrada}</p>
-                            </div>
-                        )}
-                        {auto.tamanoMotor && (
-                            <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700 hover:border-yellow-500 transition-all duration-300 hover:shadow-lg">
-                                <div className="flex items-center gap-3 mb-3">
-                                    <div className="p-2 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg">
-                                        <Settings size={24} className="text-white" />
-                                    </div>
-                                    <h3 className="text-lg font-semibold text-white">Tamaño del Motor</h3>
-                                </div>
-                                <p className="text-2xl font-bold text-yellow-400">{auto.tamanoMotor}</p>
-                            </div>
-                        )}
-                        {auto.transmision && (
-                            <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700 hover:border-yellow-500 transition-all duration-300 hover:shadow-lg">
-                                <div className="flex items-center gap-3 mb-3">
-                                    <div className="p-2 bg-gradient-to-r from-teal-500 to-teal-600 rounded-lg">
-                                        <Settings size={24} className="text-white" />
-                                    </div>
-                                    <h3 className="text-lg font-semibold text-white">Transmisión</h3>
-                                </div>
-                                <p className="text-2xl font-bold text-yellow-400">{auto.transmision}</p>
-                            </div>
-                        )}
-                        {auto.tipoCombustible && (
-                            <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700 hover:border-yellow-500 transition-all duration-300 hover:shadow-lg">
-                                <div className="flex items-center gap-3 mb-3">
-                                    <div className="p-2 bg-gradient-to-r from-green-500 to-green-600 rounded-lg">
-                                        <Fuel size={24} className="text-white" />
-                                    </div>
-                                    <h3 className="text-lg font-semibold text-white">Combustible</h3>
-                                </div>
-                                <p className="text-2xl font-bold text-yellow-400">{auto.tipoCombustible}</p>
-                            </div>
-                        )}
-                    </div>
-                </div>
 
                 {/* Sección de comentarios y reseñas con soporte anónimo */}
                 <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-2xl p-8 shadow-2xl border border-gray-700 animate-fade-in-up">
