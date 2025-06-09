@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 
 export default function ExitoPagoPage() {
     const searchParams = useSearchParams()
     const router = useRouter()
+    const { data: session } = useSession()
 
     const [loading, setLoading] = useState(true)
     const [orden, setOrden] = useState<any>(null)
@@ -16,7 +18,7 @@ export default function ExitoPagoPage() {
 
     useEffect(() => {
         const registrarVenta = async () => {
-            if (!autoId || !usuarioId || !precio) return
+            if (!autoId || !usuarioId || !precio || !session?.user?.nombre) return
 
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/ventas`, {
                 method: 'POST',
@@ -24,8 +26,9 @@ export default function ExitoPagoPage() {
                 body: JSON.stringify({
                     autoId,
                     usuarioId,
-                    monto: parseFloat(precio)
-                })
+                    monto: parseFloat(precio),
+                    nombre: session.user.nombre, // <-- Aquí está el fix
+                }),
             })
 
             if (res.ok) {
@@ -39,7 +42,10 @@ export default function ExitoPagoPage() {
         }
 
         registrarVenta()
-    }, [autoId, usuarioId, precio])
+    }, [autoId, usuarioId, precio, session])
+
+    // (lo demás permanece igual)
+
 
     if (loading) {
         return (
