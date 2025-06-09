@@ -29,16 +29,21 @@ const handler = NextAuth({
             },
         }),
     ],
+    // En [...nextauth].ts:
     callbacks: {
         async jwt({ token, user }) {
             if (user) {
-                token._id = user._id; // o el campo correcto de tu base
+                token._id = user._id || user.id
+                token.nombre = user.nombre
+                token.rol = user.rol // <-- ESTO FALTA
             }
-            return token;
+            return token
         },
         async session({ session, token }) {
-            session.user._id = token._id; // o el campo correcto
-            return session;
+            session.user._id = token._id
+            session.user.nombre = token.nombre
+            session.user.rol = token.rol // <-- ESTO FALTA
+            return session
         },
     },
     pages: {
